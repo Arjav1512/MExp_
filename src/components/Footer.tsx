@@ -88,7 +88,7 @@ export function Footer({ navigate }: FooterProps) {
 
         <div className="mt-12 pt-6 border-t border-surface-container-high flex flex-col sm:flex-row justify-between items-center gap-3">
           <p className="text-stone-400 text-[13px]">
-            © 2026 Makhana Express. From the heart of Bihar.
+            © 2026 Makhana Express. From the ❤️ of Bihar.
           </p>
           <p className="text-stone-400 text-[13px]">
             <a href="mailto:info@makhana-express.com" className="hover:text-primary transition-colors">
