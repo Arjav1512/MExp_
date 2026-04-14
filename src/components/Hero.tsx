@@ -1,13 +1,22 @@
 import { Zap } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { SkeletonHeroCard } from './Skeleton';
 import type { Page } from '../lib/router';
 import { trackCTAClick } from '../lib/analytics';
+import { hoverScale } from '../lib/motion';
 
 interface HeroProps {
   navigate: (page: Page) => void;
   onShopCTA: () => void;
 }
+
+const heroItems = [
+  { delay: 0, type: 'badge' },
+  { delay: 0.1, type: 'heading' },
+  { delay: 0.2, type: 'body' },
+  { delay: 0.3, type: 'cta' },
+];
 
 export function Hero({ navigate, onShopCTA }: HeroProps) {
   const [cardActive, setCardActive] = useState(false);
@@ -38,47 +47,72 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
   return (
     <section id="home" className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden px-8">
       <div className="absolute inset-0 bg-text-overlay flex items-center justify-center overflow-hidden">
-        <span className="text-[25vw] font-black text-on-surface opacity-[0.03] leading-none select-none">
+        <motion.span
+          className="text-[25vw] font-black text-on-surface opacity-[0.03] leading-none select-none"
+          initial={{ opacity: 0, scale: 1.08 }}
+          animate={{ opacity: 0.03, scale: 1 }}
+          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+        >
           MAKHANA
-        </span>
+        </motion.span>
       </div>
 
       <div className="max-w-[1200px] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-10 items-center relative z-10 pt-20">
         <div className="space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-tertiary-container text-on-tertiary-container font-bold text-sm">
-            <Zap className="w-4 h-4" />
-            SNACK BETTER. LIVE BETTER.
-          </div>
-
-          <h1 style={{ fontSize: 'clamp(2.75rem, 6.5vw, 4.5rem)' }} className="font-headline font-black tracking-tighter leading-[0.9] text-primary">
-            SNACK <br /> FREELY.
-          </h1>
-
-          <p style={{ fontSize: 'clamp(1.0625rem, 1.4vw, 1.25rem)' }} className="text-on-surface-variant max-w-md font-medium leading-[1.5]">
-            Natural makhana with no added preservatives.
-            <br />
-            No Junk. Just Good.
-          </p>
-
-          <div className="flex flex-wrap gap-3 pt-1">
-            <button
-              onClick={() => { trackCTAClick('Shop', 'coming-soon-modal'); onShopCTA(); }}
-              className="bg-primary hover:bg-primary-container text-on-primary text-base font-bold px-8 py-3.5 rounded-xl transition-all hover:scale-105 shadow-xl shadow-primary/20"
+          {heroItems.map(({ delay, type }) => (
+            <motion.div
+              key={type}
+              initial={{ opacity: 0, y: 32 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
             >
-              Shop
-            </button>
-            <button
-              onClick={() => navigate('mission')}
-              className="border-2 border-outline text-on-surface text-base font-bold px-8 py-3.5 rounded-xl hover:bg-surface-container transition-all"
-            >
-              Our Mission
-            </button>
-          </div>
+              {type === 'badge' && (
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-tertiary-container text-on-tertiary-container font-bold text-sm">
+                  <Zap className="w-4 h-4" />
+                  SNACK BETTER. LIVE BETTER.
+                </div>
+              )}
+              {type === 'heading' && (
+                <h1 style={{ fontSize: 'clamp(2.75rem, 6.5vw, 4.5rem)' }} className="font-headline font-black tracking-tighter leading-[0.9] text-primary">
+                  SNACK <br /> FREELY.
+                </h1>
+              )}
+              {type === 'body' && (
+                <p style={{ fontSize: 'clamp(1.0625rem, 1.4vw, 1.25rem)' }} className="text-on-surface-variant max-w-md font-medium leading-[1.5]">
+                  Natural makhana with no added preservatives.
+                  <br />
+                  No Junk. Just Good.
+                </p>
+              )}
+              {type === 'cta' && (
+                <div className="flex flex-wrap gap-3 pt-1">
+                  <motion.button
+                    onClick={() => { trackCTAClick('Shop', 'coming-soon-modal'); onShopCTA(); }}
+                    className="bg-primary text-on-primary text-base font-bold px-8 py-3.5 rounded-xl shadow-xl shadow-primary/20"
+                    {...hoverScale}
+                  >
+                    Shop
+                  </motion.button>
+                  <motion.button
+                    onClick={() => navigate('mission')}
+                    className="border-2 border-outline text-on-surface text-base font-bold px-8 py-3.5 rounded-xl hover:bg-surface-container transition-colors"
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                  >
+                    Our Mission
+                  </motion.button>
+                </div>
+              )}
+            </motion.div>
+          ))}
         </div>
 
-        <div
+        <motion.div
           ref={stackRef}
           className="relative h-[500px] md:h-[600px] flex justify-center items-center cursor-pointer"
+          initial={{ opacity: 0, x: 48 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.25, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
           onMouseEnter={() => !isMobile && setCardActive(true)}
           onMouseLeave={() => !isMobile && setCardActive(false)}
           onClick={() => isMobile && setCardActive(prev => !prev)}
@@ -105,11 +139,9 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
               }}
               className="flex flex-col h-full justify-between"
             >
-              {/* Top decorative */}
               <div className="flex justify-end">
                 <span className="text-3xl opacity-40">🌶</span>
               </div>
-              {/* Bottom content */}
               <div>
                 <span className="inline-block bg-[#bcf0ae] text-[#002201] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
                   Coming Soon
@@ -146,11 +178,9 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
               }}
               className="flex flex-col h-full justify-between"
             >
-              {/* Top decorative */}
               <div className="flex justify-end">
                 <span className="text-3xl opacity-40">✦</span>
               </div>
-              {/* Bottom content */}
               <div>
                 <span className="inline-block bg-[#ffb27a] text-[#301400] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
                   Coming Soon
@@ -197,7 +227,7 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
               <p className="text-xs text-on-surface-variant">The purest way to eat makhana.</p>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

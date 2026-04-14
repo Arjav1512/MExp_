@@ -1,6 +1,8 @@
 import { Star } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { SkeletonTestimonialCard, SkeletonAvatar } from './Skeleton';
+import { fadeUp, staggerContainer, viewportOnce } from '../lib/motion';
 
 const testimonials = [
   {
@@ -27,14 +29,28 @@ function TestimonialCard({ testimonial, offset }: { testimonial: typeof testimon
   const [imgLoaded, setImgLoaded] = useState(false);
 
   return (
-    <div
-      className={`bg-surface-container-lowest p-5 rounded-lg shadow-sm hover:shadow-xl transition-shadow relative group ${
+    <motion.div
+      className={`bg-surface-container-lowest p-5 rounded-lg shadow-sm relative group ${
         offset ? 'mt-0 md:mt-5' : ''
       }`}
+      variants={fadeUp}
+      whileHover={{
+        y: -6,
+        boxShadow: '0 20px 40px rgba(0,0,0,0.12)',
+        transition: { duration: 0.22 },
+      }}
     >
       <div className="flex gap-1 text-tertiary mb-3" role="img" aria-label="5 out of 5 stars">
         {[...Array(5)].map((_, i) => (
-          <Star key={i} className="w-4 h-4 fill-current" aria-hidden="true" />
+          <motion.span
+            key={i}
+            initial={{ opacity: 0, scale: 0.5 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={viewportOnce}
+            transition={{ delay: i * 0.06, duration: 0.2, type: 'spring' }}
+          >
+            <Star className="w-4 h-4 fill-current" aria-hidden="true" />
+          </motion.span>
         ))}
       </div>
 
@@ -57,7 +73,7 @@ function TestimonialCard({ testimonial, offset }: { testimonial: typeof testimon
           <p className="text-xs text-on-surface-variant">{testimonial.role}</p>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -71,16 +87,28 @@ export function Testimonials() {
   return (
     <section id="community" className="py-16 px-8 bg-surface-dim relative overflow-hidden">
       <div className="max-w-[1200px] mx-auto">
-        <div className="text-center mb-10">
+        <motion.div
+          className="text-center mb-10"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={viewportOnce}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        >
           <h2 style={{ fontSize: 'clamp(2rem, 3.75vw, 2.75rem)' }} className="font-headline font-black text-primary mb-2.5">
             The Makhana Experience
           </h2>
           <p className="text-base text-on-surface-variant">
             Honest snacking, done right with nothing to hide and everything to love.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-5"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+        >
           {!mounted
             ? testimonials.map((_, i) => (
                 <SkeletonTestimonialCard key={i} offset={i === 1} />
@@ -89,7 +117,7 @@ export function Testimonials() {
                 <TestimonialCard key={index} testimonial={testimonial} offset={index === 1} />
               ))
           }
-        </div>
+        </motion.div>
       </div>
     </section>
   );
