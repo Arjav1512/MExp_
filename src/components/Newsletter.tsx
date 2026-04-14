@@ -1,4 +1,4 @@
-import { CheckCircle, AlertCircle } from 'lucide-react';
+import { CheckCircle, AlertCircle, Send } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { trackEvent } from '../lib/analytics';
@@ -80,7 +80,7 @@ export function Newsletter() {
         setTimeout(() => {
           setStatus('idle');
           setMessage('');
-        }, 5000);
+        }, 6000);
       }
     } catch (error) {
       trackEvent('newsletter_error');
@@ -91,84 +91,92 @@ export function Newsletter() {
   };
 
   return (
-    <section id="newsletter" className="py-12 px-8">
-      <div className="max-w-[1200px] mx-auto bg-primary rounded-xl overflow-hidden relative">
-        <div className="absolute inset-0 bg-text-overlay opacity-5 overflow-hidden flex items-center justify-center">
-          <span className="text-[20vw] font-black text-white leading-none">EXPRESS</span>
-        </div>
+    <section id="newsletter" className="py-8 px-6 md:px-8">
+      <div className="max-w-[1200px] mx-auto">
+        <div className="relative bg-primary rounded-2xl overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none select-none overflow-hidden flex items-center justify-center">
+            <span className="text-[18vw] font-black text-white/[0.04] leading-none tracking-tighter">
+              EXPRESS
+            </span>
+          </div>
 
-        <div className="relative z-10 px-8 py-10 text-center flex flex-col items-center">
-          <h2 style={{ fontSize: 'clamp(1.875rem, 4vw, 3rem)' }} className="font-headline font-black text-on-primary mb-3 leading-[1.1]">
-            From Pond To Pack,
-            <br /> Done Right
-          </h2>
-          <p className="text-base md:text-lg text-on-primary/80 mb-6 max-w-2xl">
-            Join our journey and get 20% off on your first order. Authentic makhana, crafted with
-            care.
-          </p>
+          <div className="relative z-10 px-8 md:px-16 py-14 text-center flex flex-col items-center">
+            <span className="inline-block bg-primary-fixed/20 border border-primary-fixed/40 text-primary-fixed text-[11px] font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
+              Join the Community
+            </span>
 
-          <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-3 w-full max-w-lg">
-            <input
-              type="text"
-              name="website"
-              value={honeypot}
-              onChange={(e) => setHoneypot(e.target.value)}
-              tabIndex={-1}
-              autoComplete="off"
-              aria-hidden="true"
-              style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', opacity: 0 }}
-            />
-            {status === 'loading' ? (
-              <div className="flex-grow h-[50px] rounded-xl newsletter-skeleton" aria-hidden="true" />
-            ) : (
-              <>
-                <label htmlFor="newsletter-email" className="sr-only">Email address</label>
-                <input
-                  id="newsletter-email"
-                  className="appearance-none flex-grow bg-white/10 border border-white/20 text-white placeholder:text-white/40 px-5 py-3 rounded-xl focus:ring-2 focus:ring-primary-fixed focus:border-transparent focus:outline-none text-base"
-                  placeholder="Enter your email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  style={{
-                    WebkitAppearance: 'none',
-                    MozAppearance: 'none',
-                    appearance: 'none',
-                  }}
-                />
-              </>
-            )}
-            {status === 'loading' ? (
-              <div className="h-[50px] w-full md:w-[160px] rounded-xl newsletter-skeleton" aria-hidden="true" />
-            ) : (
-              <button
-                type="submit"
-                className="bg-primary-fixed text-on-primary-fixed font-black text-base px-7 py-3 rounded-xl hover:scale-105 transition-transform"
-              >
-                Join & Save 20%
-              </button>
-            )}
-          </form>
+            <h2
+              style={{ fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', letterSpacing: '-0.02em' }}
+              className="font-headline font-black text-on-primary mb-3 leading-tight"
+            >
+              From Pond To Pack,<br />Done Right
+            </h2>
+            <p className="text-on-primary/70 text-base mb-8 max-w-lg leading-relaxed">
+              Join our journey and get 20% off on your first order. Authentic makhana, crafted with care.
+            </p>
 
-          {status === 'success' && (
-            <div className="mt-4 animate-fade-in">
-              <div className="bg-white/20 backdrop-blur-sm text-white px-5 py-3 rounded-full flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 shrink-0" />
-                <span className="font-semibold text-sm">{message}</span>
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
+              <input
+                type="text"
+                name="website"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', opacity: 0 }}
+              />
+              {status === 'loading' ? (
+                <>
+                  <div className="flex-grow h-[50px] rounded-xl newsletter-skeleton" aria-hidden="true" />
+                  <div className="h-[50px] w-full sm:w-[160px] rounded-xl newsletter-skeleton" aria-hidden="true" />
+                </>
+              ) : (
+                <>
+                  <label htmlFor="newsletter-email" className="sr-only">Email address</label>
+                  <input
+                    id="newsletter-email"
+                    className="flex-grow bg-white/[0.08] border border-white/20 text-white placeholder:text-white/40 px-5 py-3 rounded-xl focus:ring-2 focus:ring-primary-fixed focus:border-transparent focus:outline-none text-[15px] transition-all"
+                    placeholder="Enter your email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    disabled={status === 'success'}
+                  />
+                  <button
+                    type="submit"
+                    disabled={status === 'success'}
+                    className="inline-flex items-center justify-center gap-2 bg-primary-fixed text-on-primary-fixed font-bold text-sm px-6 py-3 rounded-xl hover:brightness-105 transition-all active:scale-[0.97] disabled:opacity-60 whitespace-nowrap"
+                  >
+                    <Send className="w-4 h-4" />
+                    Join & Save 20%
+                  </button>
+                </>
+              )}
+            </form>
+
+            {status === 'success' && (
+              <div className="mt-5 animate-fade-in">
+                <div className="inline-flex items-center gap-2.5 bg-white/15 backdrop-blur-sm text-white px-5 py-3 rounded-full border border-white/20">
+                  <CheckCircle className="w-5 h-5 shrink-0 text-primary-fixed" />
+                  <span className="font-semibold text-sm">{message}</span>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {status === 'error' && (
-            <div className="mt-4 bg-red-500/20 backdrop-blur-sm text-white px-5 py-3 rounded-full flex items-center gap-2 animate-fade-in">
-              <AlertCircle className="w-5 h-5" />
-              <span className="font-semibold text-sm">{message}</span>
-            </div>
-          )}
+            {status === 'error' && (
+              <div className="mt-5 animate-fade-in">
+                <div className="inline-flex items-center gap-2.5 bg-red-500/15 text-white px-5 py-3 rounded-full border border-red-400/30">
+                  <AlertCircle className="w-5 h-5 shrink-0" />
+                  <span className="font-semibold text-sm">{message}</span>
+                </div>
+              </div>
+            )}
 
-          <p className="mt-4 text-sm text-on-primary/60 font-medium">
-            *Offer valid for first-time customers only.
-          </p>
+            <p className="mt-5 text-sm text-on-primary/50 font-medium">
+              *Offer valid for first-time customers only.
+            </p>
+          </div>
         </div>
       </div>
     </section>

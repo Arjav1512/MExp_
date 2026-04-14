@@ -1,4 +1,4 @@
-import { ArrowLeft, Droplets, Hand, Leaf, ShieldCheck, Heart, Sprout } from 'lucide-react';
+import { ArrowLeft, Droplets, Hand, Leaf, ShieldCheck, Heart, Sprout, ArrowRight } from 'lucide-react';
 import type { Page } from '../lib/router';
 
 interface OurMissionProps {
@@ -42,11 +42,10 @@ const impacts = [
 
 export function OurMission({ navigate, onShopCTA }: OurMissionProps) {
   return (
-    <div className="min-h-screen pt-24 pb-20">
-      {/* Back nav */}
-      <div className="max-w-[1200px] mx-auto px-8 mb-10">
+    <div className="min-h-screen pt-[68px]">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-8 pt-8 pb-4">
         <button
-          onClick={() => navigate('home')}
+          onClick={() => { navigate('home'); window.scrollTo({ top: 0 }); }}
           className="inline-flex items-center gap-2 text-sm font-bold text-on-surface-variant hover:text-primary transition-colors group"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
@@ -55,25 +54,26 @@ export function OurMission({ navigate, onShopCTA }: OurMissionProps) {
       </div>
 
       {/* Hero */}
-      <section className="max-w-[1200px] mx-auto px-8 mb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <section className="max-w-[1200px] mx-auto px-6 md:px-8 py-12 md:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div className="space-y-6">
-            <span className="inline-flex items-center gap-2 bg-tertiary-container text-on-tertiary-container text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full">
+            <span className="section-label">
               <Sprout className="w-3.5 h-3.5" />
               Our Mission
             </span>
             <h1
-              style={{ fontSize: 'clamp(2.5rem, 5.5vw, 4rem)' }}
-              className="font-headline font-black text-primary leading-[1.0] tracking-tighter"
+              style={{ fontSize: 'clamp(2.5rem, 5.5vw, 4rem)', letterSpacing: '-0.03em', lineHeight: '0.95' }}
+              className="font-headline font-black text-primary"
             >
-              Snack Better. Choose Better.
+              Snack Better.<br />Choose Better.
             </h1>
+            <div className="divider" />
             <p className="text-base md:text-lg text-on-surface-variant leading-relaxed max-w-lg">
-              We started Makhana Express to bring snacking back to its roots—pure makhana from Bihar's ponds, handled with care, and nothing added along the way.
+              We started Makhana Express to bring snacking back to its roots — pure makhana from Bihar's ponds, handled with care, and nothing added along the way.
             </p>
             <button
               onClick={onShopCTA}
-              className="inline-flex items-center gap-2 bg-primary text-on-primary font-bold px-8 py-3.5 rounded-xl hover:scale-105 transition-all shadow-lg shadow-primary/20 text-sm"
+              className="btn-primary text-[15px] px-8 py-3.5"
             >
               <Heart className="w-4 h-4" />
               Shop Better Snacks
@@ -90,165 +90,172 @@ export function OurMission({ navigate, onShopCTA }: OurMissionProps) {
                 width={448}
                 height={448}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent" />
-              <div className="absolute bottom-6 left-6 right-6">
+              <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-primary/10 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-6">
                 <p className="text-white font-bold text-sm leading-snug">
                   Bihar's lotus ponds — where every seed begins its journey.
                 </p>
               </div>
             </div>
-            <div className="absolute -top-5 -right-5 w-24 h-24 bg-primary-fixed rounded-full flex flex-col items-center justify-center text-center shadow-xl">
-              <span className="text-xl font-black text-on-primary-fixed leading-none">Pure</span>
-              <span className="text-[10px] font-bold text-on-primary-fixed/70 uppercase tracking-wide">Always</span>
+            <div className="absolute -top-4 -right-4 md:-top-5 md:-right-5 w-20 h-20 md:w-24 md:h-24 bg-primary-fixed rounded-2xl flex flex-col items-center justify-center text-center shadow-xl rotate-3">
+              <span className="text-lg font-black text-primary leading-none">Pure</span>
+              <span className="text-[10px] font-bold text-primary/70 uppercase tracking-wide mt-0.5">Always</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* Mission Statement */}
-      <section className="bg-primary py-16 px-8 mb-20">
-        <div className="max-w-[900px] mx-auto text-center space-y-6">
+      <section className="bg-primary py-14 md:py-20 px-6 md:px-8">
+        <div className="max-w-[860px] mx-auto text-center space-y-5">
           <h2
-            style={{ fontSize: 'clamp(1.5rem, 3vw, 2.25rem)' }}
+            style={{ fontSize: 'clamp(1.5rem, 3vw, 2.25rem)', letterSpacing: '-0.02em' }}
             className="font-headline font-black text-on-primary leading-tight"
           >
-            The best snack is one you can trust—what's in it, and where it comes from.
+            The best snack is one you can trust — what's in it, and where it comes from.
           </h2>
-          <p className="text-on-primary/70 text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
+          <p className="text-on-primary/65 text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
             We're bringing Bihar's ancient superfood to modern kitchens, while preserving the traditions and communities behind it.
           </p>
         </div>
       </section>
 
       {/* Impact Stats */}
-      <section className="max-w-[1200px] mx-auto px-8 mb-20">
-        <div className="text-center mb-10">
-          <h2
-            style={{ fontSize: 'clamp(1.875rem, 3.25vw, 2.5rem)' }}
-            className="font-headline font-black text-primary mb-2"
-          >
-            Proof, Not Promises
-          </h2>
-          <p className="text-on-surface-variant text-base">
-            Real impact, measured honestly.
-          </p>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-          {impacts.map((item) => (
-            <div
-              key={item.stat}
-              className="bg-surface-container rounded-2xl p-6 text-center hover:shadow-lg transition-shadow"
+      <section className="py-16 md:py-20 px-6 md:px-8 bg-surface-container-low">
+        <div className="max-w-[1200px] mx-auto">
+          <div className="text-center mb-10 space-y-2">
+            <span className="section-label">Impact</span>
+            <h2
+              style={{ fontSize: 'clamp(1.875rem, 3.25vw, 2.5rem)', letterSpacing: '-0.02em' }}
+              className="font-headline font-black text-primary"
             >
-              <p className="font-headline font-black text-primary mb-1.5" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
-                {item.stat}
-              </p>
-              <p className="text-on-surface-variant text-sm font-medium leading-snug">{item.label}</p>
-            </div>
-          ))}
+              Proof, Not Promises
+            </h2>
+            <p className="text-on-surface-variant text-base">Real impact, measured honestly.</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
+            {impacts.map((item) => (
+              <div
+                key={item.stat}
+                className="card-base p-6 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+              >
+                <p
+                  className="font-headline font-black text-primary mb-1.5 leading-none"
+                  style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}
+                >
+                  {item.stat}
+                </p>
+                <p className="text-on-surface-variant text-sm font-medium leading-snug">{item.label}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Core Values */}
-      <section className="max-w-[1200px] mx-auto px-8 mb-20">
-        <div className="text-center mb-10">
-          <h2
-            style={{ fontSize: 'clamp(1.875rem, 3.25vw, 2.5rem)' }}
-            className="font-headline font-black text-primary mb-2"
-          >
-            What We Believe In
-          </h2>
-          <p className="text-on-surface-variant text-base">
-            Every decision we make starts here.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {values.map((value) => {
-            const Icon = value.icon;
-            return (
-              <div
-                key={value.title}
-                className="flex gap-4 bg-surface-container-lowest border border-surface-container-high p-6 rounded-2xl hover:shadow-md transition-shadow"
-              >
-                <div className="w-11 h-11 rounded-full bg-surface-container-highest flex items-center justify-center shrink-0">
-                  <Icon className="w-5 h-5 text-primary" />
+      <section className="py-16 md:py-20 px-6 md:px-8">
+        <div className="max-w-[1200px] mx-auto">
+          <div className="text-center mb-10 space-y-2">
+            <span className="section-label">Values</span>
+            <h2
+              style={{ fontSize: 'clamp(1.875rem, 3.25vw, 2.5rem)', letterSpacing: '-0.02em' }}
+              className="font-headline font-black text-primary"
+            >
+              What We Believe In
+            </h2>
+            <p className="text-on-surface-variant text-base">Every decision we make starts here.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {values.map((value) => {
+              const Icon = value.icon;
+              return (
+                <div
+                  key={value.title}
+                  className="card-base p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex gap-4"
+                >
+                  <div className="w-11 h-11 rounded-xl bg-primary/[0.08] flex items-center justify-center shrink-0">
+                    <Icon className="w-5 h-5 text-primary" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <h3 className="font-bold text-[15px] text-on-surface">{value.title}</h3>
+                    <p className="text-on-surface-variant text-sm leading-relaxed">{value.description}</p>
+                  </div>
                 </div>
-                <div className="space-y-1.5">
-                  <h3 className="font-bold text-base text-on-surface">{value.title}</h3>
-                  <p className="text-on-surface-variant text-sm leading-relaxed">{value.description}</p>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </section>
 
       {/* Cause Section */}
-      <section className="max-w-[1200px] mx-auto px-8 mb-20">
-        <div className="bg-surface-container-low rounded-2xl overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-2">
-            <div className="relative min-h-[320px] lg:min-h-full">
-              <img
-                src="/generated-1775776028886-nt5g5.webp"
-                alt="Bihar makhana farming community members at work"
-                className="absolute inset-0 w-full h-full object-cover"
-                loading="lazy"
-                width={600}
-                height={400}
-              />
-              <div className="absolute inset-0 bg-primary/30" />
-            </div>
-            <div className="p-8 md:p-12 flex flex-col justify-center space-y-5">
-              <h2
-                style={{ fontSize: 'clamp(1.625rem, 2.75vw, 2.25rem)' }}
-                className="font-headline font-black text-primary leading-tight"
-              >
-                Better for You. Fairer for Them.
-              </h2>
-              <p className="text-on-surface-variant text-sm md:text-base leading-relaxed">
-                Bihar's makhana farmers come from some of India's most underserved communities. Their craft demands skill, strength, and generations of knowledge—yet for years, middlemen took most of the value.
-              </p>
-              <p className="text-on-surface-variant text-sm md:text-base leading-relaxed">
-                We work directly with farming cooperatives to change that. No layers, no exploitation—just fair pay, transparency, and respect for the people behind every harvest.
-              </p>
-              <div className="pt-2">
-                <span className="inline-block bg-primary-fixed text-on-primary-fixed font-bold text-xs uppercase tracking-widest px-4 py-2 rounded-full">
-                  When we grow, our farmers grow with us.
-                </span>
+      <section className="py-16 md:py-20 px-6 md:px-8 bg-surface-container-low">
+        <div className="max-w-[1200px] mx-auto">
+          <div className="rounded-2xl overflow-hidden shadow-xl">
+            <div className="grid grid-cols-1 lg:grid-cols-2">
+              <div className="relative min-h-[300px] lg:min-h-full">
+                <img
+                  src="/generated-1775776028886-nt5g5.webp"
+                  alt="Bihar makhana farming community members at work"
+                  className="absolute inset-0 w-full h-full object-cover"
+                  loading="lazy"
+                  width={600}
+                  height={400}
+                />
+                <div className="absolute inset-0 bg-primary/25" />
+              </div>
+              <div className="bg-surface-container-lowest p-8 md:p-12 flex flex-col justify-center space-y-5">
+                <span className="section-label self-start">Fair Trade</span>
+                <h2
+                  style={{ fontSize: 'clamp(1.625rem, 2.75vw, 2.25rem)', letterSpacing: '-0.02em' }}
+                  className="font-headline font-black text-primary leading-tight"
+                >
+                  Better for You. Fairer for Them.
+                </h2>
+                <div className="divider" />
+                <p className="text-on-surface-variant text-sm md:text-[15px] leading-relaxed">
+                  Bihar's makhana farmers come from some of India's most underserved communities. Their craft demands skill, strength, and generations of knowledge — yet for years, middlemen took most of the value.
+                </p>
+                <p className="text-on-surface-variant text-sm md:text-[15px] leading-relaxed">
+                  We work directly with farming cooperatives to change that. No layers, no exploitation — just fair pay, transparency, and respect for the people behind every harvest.
+                </p>
+                <div className="pt-1">
+                  <span className="section-label">When we grow, our farmers grow with us.</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="max-w-[800px] mx-auto px-8 text-center">
-        <h2
-          style={{ fontSize: 'clamp(1.875rem, 3.25vw, 2.5rem)' }}
-          className="font-headline font-black text-primary mb-4 leading-tight"
-        >
-          Snack Better. Choose Better.
-        </h2>
-        <p className="text-on-surface-variant text-base mb-8 max-w-md mx-auto leading-relaxed">
-          Every bag supports clean ingredients, fair trade, and the farmers behind it.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button
-            onClick={onShopCTA}
-            className="bg-primary text-on-primary font-bold px-8 py-3.5 rounded-xl hover:scale-105 transition-all shadow-lg shadow-primary/20 text-sm"
+      {/* Final CTA */}
+      <section className="py-16 md:py-24 px-6 md:px-8">
+        <div className="max-w-[680px] mx-auto text-center space-y-6">
+          <h2
+            style={{ fontSize: 'clamp(1.875rem, 3.25vw, 2.5rem)', letterSpacing: '-0.02em' }}
+            className="font-headline font-black text-primary leading-tight"
           >
-            Shop Now
-          </button>
-          <button
-            onClick={() => {
-              navigate('home');
-              setTimeout(() => {
-                document.getElementById('community')?.scrollIntoView({ behavior: 'smooth' });
-              }, 100);
-            }}
-            className="border-2 border-outline text-on-surface font-bold px-8 py-3.5 rounded-xl hover:bg-surface-container transition-all text-sm"
-          >
-            Join the Community
-          </button>
+            Snack Better. Choose Better.
+          </h2>
+          <p className="text-on-surface-variant text-base max-w-md mx-auto leading-relaxed">
+            Every bag supports clean ingredients, fair trade, and the farmers behind it.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button onClick={onShopCTA} className="btn-primary text-[15px] px-8 py-3.5">
+              Shop Now
+            </button>
+            <button
+              onClick={() => {
+                navigate('home');
+                setTimeout(() => {
+                  document.getElementById('community')?.scrollIntoView({ behavior: 'smooth' });
+                }, 120);
+              }}
+              className="btn-secondary text-[15px] px-8 py-3.5 inline-flex items-center gap-2 group"
+            >
+              Join the Community
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+            </button>
+          </div>
         </div>
       </section>
     </div>
