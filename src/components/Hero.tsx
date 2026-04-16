@@ -58,25 +58,35 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
               SNACK<br />FREELY.
             </h1>
             <p
-              style={{ fontSize: 'clamp(1rem, 1.4vw, 1.2rem)' }}
-              className="text-on-surface-variant font-medium leading-relaxed max-w-[400px] pt-2"
+              style={{ fontSize: 'clamp(1rem, 1.35vw, 1.15rem)' }}
+              className="text-on-surface font-semibold leading-snug max-w-[380px] pt-2"
             >
-              Natural makhana with no added preservatives.
-              <br />
-              No junk. Just good.
+              Clean, crunchy makhana you'll keep reaching for.
+            </p>
+            <p
+              style={{ fontSize: 'clamp(0.875rem, 1.1vw, 1rem)' }}
+              className="text-on-surface-variant font-medium leading-relaxed max-w-[380px]"
+            >
+              No junk. No preservatives. Just good.
             </p>
           </div>
 
           <div className="flex flex-wrap gap-3 pt-1">
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1.5">
               <button
                 onClick={() => { trackCTAClick('Shop', 'coming-soon-modal'); onShopCTA(); }}
-                className="inline-flex items-center justify-center gap-2 bg-primary text-on-primary font-black text-base px-10 py-4 rounded-xl transition-all duration-200 hover:brightness-110 active:scale-[0.97]"
+                className="inline-flex items-center justify-center gap-2 bg-primary text-on-primary font-black text-base px-10 py-4 rounded-xl transition-all duration-200 hover:brightness-110 hover:scale-[1.02] active:scale-[0.97]"
                 style={{ boxShadow: '0 4px 24px rgba(21,66,18,0.35), 0 1px 4px rgba(21,66,18,0.2)' }}
               >
-                Shop Now
+                Shop Fresh Makhana
               </button>
-              <p className="text-[11px] text-on-surface-variant font-medium text-center">Start your first pack</p>
+              <div className="flex items-center justify-center gap-2">
+                <span className="text-[10px] text-on-surface-variant/60">No preservatives</span>
+                <span className="w-0.5 h-0.5 rounded-full bg-on-surface-variant/30 inline-block" />
+                <span className="text-[10px] text-on-surface-variant/60">100% natural</span>
+                <span className="w-0.5 h-0.5 rounded-full bg-on-surface-variant/30 inline-block" />
+                <span className="text-[10px] text-on-surface-variant/60">Made fresh</span>
+              </div>
             </div>
             <button
               onClick={() => navigate('mission')}

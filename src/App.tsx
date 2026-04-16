@@ -6,6 +6,7 @@ import { ProductShowcase } from './components/ProductShowcase';
 import { Craftsmanship } from './components/Craftsmanship';
 import { Testimonials } from './components/Testimonials';
 import { Newsletter } from './components/Newsletter';
+import { ConversionCloser } from './components/ConversionCloser';
 import { Footer } from './components/Footer';
 import { OurMission } from './components/OurMission';
 import { ComingSoonModal } from './components/ComingSoonModal';
@@ -39,6 +40,7 @@ function App() {
             <FlavorSpectrum />
             <Craftsmanship />
             <Testimonials />
+            <ConversionCloser onShopCTA={handleShopCTA} />
             <Newsletter />
           </>
         )}

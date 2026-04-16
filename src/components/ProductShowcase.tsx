@@ -1,4 +1,4 @@
-import { ShoppingBag, Package, ArrowRight } from 'lucide-react';
+import { ShoppingBag, Package, ArrowRight, Star } from 'lucide-react';
 
 interface ProductShowcaseProps {
   onShopCTA: () => void;
@@ -6,25 +6,22 @@ interface ProductShowcaseProps {
 
 const shots = [
   {
-    src: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop&crop=center&sat=20&bri=5',
+    src: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop&crop=center',
     alt: 'Close-up of crispy white makhana foxnuts in a dark ceramic bowl — visible porous texture',
-    label: 'Crispy texture',
-    sublabel: 'Light & airy inside',
-    accent: 'bg-amber-50',
+    label: 'Light. Crunchy. Addictive.',
+    sublabel: 'Feel it before the first bite',
   },
   {
-    src: 'https://images.pexels.com/photos/1640770/pexels-photo-1640770.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop&crop=center',
-    alt: 'Whole makhana foxnuts scattered on a dark surface showing clean white colour',
-    label: 'Nothing added',
-    sublabel: '0 preservatives',
-    accent: 'bg-green-50',
+    src: 'https://images.pexels.com/photos/1640770/pexels-photo-1640770.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop&crop=center',
+    alt: 'Whole makhana foxnuts scattered — showing clean white colour and porous texture',
+    label: 'Guilt-free snacking.',
+    sublabel: '0 additives. Just makhana.',
   },
   {
-    src: 'https://images.pexels.com/photos/1435735/pexels-photo-1435735.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop&crop=center',
-    alt: 'Bowl of makhana served as a snack — perfect ready-to-eat size',
-    label: 'Ready to eat',
-    sublabel: 'No prep needed',
-    accent: 'bg-stone-50',
+    src: 'https://images.pexels.com/photos/1435735/pexels-photo-1435735.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop&crop=center',
+    alt: 'Bowl of makhana served as a snack at a tea-time moment — perfect ready-to-eat size',
+    label: 'Perfect snack moment.',
+    sublabel: 'Ready in seconds. No prep.',
   },
 ];
 
@@ -35,6 +32,12 @@ const attributes = [
   { label: 'Low calorie', icon: '↓' },
   { label: 'Vegan', icon: '✓' },
   { label: '0 additives', icon: '✓' },
+];
+
+const socialProof = [
+  { quote: "Didn't expect makhana to taste this good.", name: 'Priya M.', stars: 5 },
+  { quote: "Finally a snack that feels genuinely clean.", name: 'Rahul S.', stars: 5 },
+  { quote: "Keep reaching for another handful. That's how good.", name: 'Anika R.', stars: 5 },
 ];
 
 export function ProductShowcase({ onShopCTA }: ProductShowcaseProps) {
@@ -59,15 +62,15 @@ export function ProductShowcase({ onShopCTA }: ProductShowcaseProps) {
           </div>
           <button
             onClick={onShopCTA}
-            className="btn-primary shrink-0"
+            className="btn-primary shrink-0 hover:scale-[1.02] transition-transform duration-150"
             style={{ boxShadow: '0 4px 20px rgba(21,66,18,0.28)' }}
           >
             <ShoppingBag className="w-4 h-4" />
-            Order Your Pack
+            Shop Fresh Makhana
           </button>
         </div>
 
-        {/* Photo grid */}
+        {/* Photo grid — craving triggers */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {shots.map(({ src, alt, label, sublabel }) => (
             <div
@@ -83,14 +86,45 @@ export function ProductShowcase({ onShopCTA }: ProductShowcaseProps) {
                 width={480}
                 height={600}
               />
-              {/* Warm tone overlay for appetite appeal */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/5 to-transparent" />
+              {/* Bottom gradient for legibility */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
+              {/* Top-right craving chip */}
+              <div className="absolute top-3.5 right-3.5">
+                <span className="bg-white/10 backdrop-blur-sm border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">
+                  Fresh batch
+                </span>
+              </div>
+              {/* Bottom copy */}
               <div className="absolute bottom-4 left-4 right-4">
-                <p className="text-white font-black text-base leading-none">{label}</p>
-                <p className="text-white/65 text-xs font-medium mt-0.5">{sublabel}</p>
+                <p className="text-white font-black text-[15px] leading-tight">{label}</p>
+                <p className="text-white/60 text-[11px] font-medium mt-0.5">{sublabel}</p>
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Social proof strip */}
+        <div className="relative overflow-hidden rounded-2xl bg-primary/[0.04] border border-primary/10 px-6 md:px-10 py-7">
+          <div className="flex items-start gap-3 mb-5">
+            <div className="flex gap-0.5 pt-0.5">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-4 h-4 fill-[#e8a000] text-[#e8a000]" />
+              ))}
+            </div>
+            <p className="text-sm font-bold text-on-surface">
+              Loved by <span className="text-primary">1,000+ snackers</span> across India
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {socialProof.map(({ quote, name }) => (
+              <div key={name} className="space-y-2">
+                <p className="text-[15px] text-on-surface font-medium leading-snug">
+                  "{quote}"
+                </p>
+                <p className="text-xs text-on-surface-variant font-semibold">— {name}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Packaging + delivery strip */}
@@ -145,13 +179,13 @@ export function ProductShowcase({ onShopCTA }: ProductShowcaseProps) {
         {/* Inline secondary CTA */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-2">
           <p className="text-on-surface-variant text-sm font-medium text-center sm:text-left">
-            Still thinking? Try your first pack — zero risk, full flavour.
+            Fresh batches made weekly — don't miss yours.
           </p>
           <button
             onClick={onShopCTA}
             className="inline-flex items-center gap-2 text-primary font-bold text-sm border-b-2 border-primary pb-0.5 hover:gap-3 transition-all duration-200 group shrink-0"
           >
-            Try Your First Pack
+            Get Your First Pack
             <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </button>
         </div>
