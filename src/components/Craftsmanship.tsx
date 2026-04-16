@@ -36,9 +36,9 @@ export function Craftsmanship() {
           <div className="lg:col-span-7 relative">
             <div className="relative z-10 rounded-2xl overflow-hidden aspect-video w-full shadow-2xl">
               <img
-                className="w-full h-full object-cover"
-                src="/Screenshot_2026-04-09_at_7.00.41_PM.webp"
-                alt="Makhana lotus pond in Bihar — the source of our raw foxnuts"
+                className="w-full h-full object-cover object-center"
+                src="/Harvesting_makhana_in_a_lotus_pond.png"
+                alt="Fresh makhana sourced from lotus ponds, cleaned and prepared for consumption"
                 loading="lazy"
                 width={800}
                 height={450}
