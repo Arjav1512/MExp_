@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { FlavorSpectrum } from './components/FlavorSpectrum';
+import { ProductShowcase } from './components/ProductShowcase';
 import { Craftsmanship } from './components/Craftsmanship';
 import { Testimonials } from './components/Testimonials';
 import { Newsletter } from './components/Newsletter';
@@ -34,6 +35,7 @@ function App() {
         ) : (
           <>
             <Hero navigate={navigate} onShopCTA={handleShopCTA} />
+            <ProductShowcase onShopCTA={handleShopCTA} />
             <FlavorSpectrum />
             <Craftsmanship />
             <Testimonials />

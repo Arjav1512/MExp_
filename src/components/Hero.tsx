@@ -68,15 +68,19 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
           </div>
 
           <div className="flex flex-wrap gap-3 pt-1">
-            <button
-              onClick={() => { trackCTAClick('Shop', 'coming-soon-modal'); onShopCTA(); }}
-              className="btn-primary text-base px-8 py-3.5"
-            >
-              Shop
-            </button>
+            <div className="flex flex-col gap-1">
+              <button
+                onClick={() => { trackCTAClick('Shop', 'coming-soon-modal'); onShopCTA(); }}
+                className="inline-flex items-center justify-center gap-2 bg-primary text-on-primary font-black text-base px-10 py-4 rounded-xl transition-all duration-200 hover:brightness-110 active:scale-[0.97]"
+                style={{ boxShadow: '0 4px 24px rgba(21,66,18,0.35), 0 1px 4px rgba(21,66,18,0.2)' }}
+              >
+                Shop Now
+              </button>
+              <p className="text-[11px] text-on-surface-variant font-medium text-center">Start your first pack</p>
+            </div>
             <button
               onClick={() => navigate('mission')}
-              className="btn-secondary text-base px-8 py-3.5 inline-flex items-center gap-2 group"
+              className="btn-secondary text-base px-8 py-4 inline-flex items-center gap-2 group self-start"
             >
               Our Mission
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -121,15 +125,22 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
               style={{ opacity: cardActive ? 1 : 0, transition: 'opacity 0.2s ease', transitionDelay: cardActive ? '0.2s' : '0s' }}
               className="flex flex-col h-full justify-between"
             >
-              <div className="flex justify-end">
-                <span className="text-3xl opacity-30">🌶</span>
+              <div className="flex justify-between items-start">
+                <span className="inline-flex items-center gap-1 bg-white/10 text-white/80 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">
+                  Crispy
+                </span>
+                <span className="text-2xl opacity-50">🌶</span>
               </div>
               <div>
                 <span className="inline-block bg-primary-fixed text-on-primary-fixed text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
                   Coming Soon
                 </span>
                 <h3 className="font-headline font-black text-2xl text-white leading-tight">Peri Peri</h3>
-                <p className="text-white/60 text-sm mt-1">Bold. Spiced. Unapologetic.</p>
+                <p className="text-white/70 text-sm mt-1">Lightly spiced, fiery finish.</p>
+                <p className="text-white/40 text-xs mt-0.5">Airy • Crunchy • Addictive</p>
+                <div className="mt-3 inline-flex items-center gap-1.5 text-primary-fixed text-xs font-bold">
+                  Explore Flavor <ArrowRight className="w-3 h-3" />
+                </div>
               </div>
             </div>
           </div>
@@ -150,15 +161,22 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
               style={{ opacity: cardActive ? 1 : 0, transition: 'opacity 0.2s ease', transitionDelay: cardActive ? '0.2s' : '0s' }}
               className="flex flex-col h-full justify-between"
             >
-              <div className="flex justify-end">
-                <span className="text-3xl opacity-30">✦</span>
+              <div className="flex justify-between items-start">
+                <span className="inline-flex items-center gap-1 bg-white/10 text-white/80 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">
+                  Roasted
+                </span>
+                <span className="text-2xl opacity-50">✦</span>
               </div>
               <div>
                 <span className="inline-block bg-[#ffb27a] text-[#301400] text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
                   Coming Soon
                 </span>
                 <h3 className="font-headline font-black text-2xl text-white leading-tight">Black Pepper</h3>
-                <p className="text-white/60 text-sm mt-1">Sharp. Clean. Unexpected.</p>
+                <p className="text-white/70 text-sm mt-1">Warm, earthy, satisfying crunch.</p>
+                <p className="text-white/40 text-xs mt-0.5">Peppery • Bold • Clean</p>
+                <div className="mt-3 inline-flex items-center gap-1.5 text-[#ffb27a] text-xs font-bold">
+                  Explore Flavor <ArrowRight className="w-3 h-3" />
+                </div>
               </div>
             </div>
           </div>
@@ -186,9 +204,13 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
                 onError={() => setImageLoaded(true)}
               />
             </div>
-            <div className="space-y-0.5 px-1">
-              <h3 className="font-headline font-bold text-primary text-sm">The Classic</h3>
-              <p className="text-xs text-on-surface-variant">The purest way to eat makhana.</p>
+            <div className="px-1 space-y-1">
+              <div className="flex items-center justify-between">
+                <h3 className="font-headline font-bold text-primary text-sm">The Classic</h3>
+                <span className="text-[10px] bg-primary-fixed text-on-primary-fixed font-bold px-2 py-0.5 rounded-full">Airy</span>
+              </div>
+              <p className="text-xs text-on-surface-variant">Lightly roasted, earthy crunch.</p>
+              <p className="text-[10px] text-on-surface-variant/60">Clean • Natural • 0 Additives</p>
             </div>
           </div>
 

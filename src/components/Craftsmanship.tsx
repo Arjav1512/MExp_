@@ -1,21 +1,31 @@
-import { Hand, ShieldCheck, Droplets } from 'lucide-react';
+import { Hand, ShieldCheck, Droplets, Sparkles, Sun, CheckCircle } from 'lucide-react';
 
 const pillars = [
   {
     icon: Hand,
     title: 'Harvested by Hand',
-    desc: 'Every seed is hand picked by farmers — a tradition passed down through generations who have done this for over a thousand years.',
+    desc: 'Hand-picked by skilled farmers in Bihar — preserving texture and nutrition that machines can\'t.',
+    benefit: 'Better quality, every time',
   },
   {
     icon: ShieldCheck,
     title: 'Nothing Added. Ever.',
-    desc: 'No roasting, no oil, no preservatives. We deliver makhana exactly as nature made it, so you control what goes in.',
+    desc: 'No oil, no preservatives, no fillers. You get raw makhana exactly as nature made it — cook it your way.',
+    benefit: 'You control what you eat',
   },
   {
     icon: Droplets,
     title: 'Grown in Clean Water',
-    desc: 'Makhana grows in freshwater lotus ponds, untouched by factory floors. No pesticides — just water, sun, and time.',
+    desc: 'From freshwater lotus ponds, not factory floors. No soil pesticides — just pure water, sun, and time.',
+    benefit: 'Cleaner than any farmed snack',
   },
+];
+
+const trustBadges = [
+  { icon: Sun, label: 'Sun-Dried' },
+  { icon: Sparkles, label: 'Washed & Cleaned' },
+  { icon: CheckCircle, label: 'Quality Checked' },
+  { icon: ShieldCheck, label: 'Food Safe Processing' },
 ];
 
 export function Craftsmanship() {
@@ -28,12 +38,17 @@ export function Craftsmanship() {
               <img
                 className="w-full h-full object-cover"
                 src="/Screenshot_2026-04-09_at_7.00.41_PM.webp"
-                alt="Lotus pond in Bihar where makhana is harvested by hand"
+                alt="Makhana lotus pond in Bihar — the source of our raw foxnuts"
                 loading="lazy"
                 width={800}
                 height={450}
               />
               <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-primary/20" />
+              <div className="absolute bottom-0 left-0 right-0 px-5 py-4 bg-gradient-to-t from-black/60 to-transparent">
+                <p className="text-white text-xs font-semibold leading-snug">
+                  Carefully cleaned and processed before reaching you
+                </p>
+              </div>
             </div>
 
             <div className="absolute -bottom-6 -right-4 md:-bottom-8 md:-right-8 w-40 h-40 md:w-48 md:h-48 bg-primary text-on-primary rounded-full flex flex-col items-center justify-center text-center p-4 z-20 shadow-xl shadow-primary/30">
@@ -51,23 +66,44 @@ export function Craftsmanship() {
                 style={{ fontSize: 'clamp(1.875rem, 3.25vw, 2.5rem)', letterSpacing: '-0.02em' }}
                 className="font-headline font-black text-primary leading-[1.05]"
               >
-                From Bihar's Pond
+                Why Our Makhana is Different
               </h2>
+              <p className="text-on-surface-variant text-sm leading-relaxed">
+                From clean water ponds to your hands — every step is intentional, traceable, and honest.
+              </p>
               <div className="divider" />
             </div>
 
             <div className="space-y-4">
-              {pillars.map(({ icon: Icon, title, desc }) => (
+              {pillars.map(({ icon: Icon, title, desc, benefit }) => (
                 <div key={title} className="flex gap-4 group">
                   <div className="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center shrink-0 group-hover:bg-primary/10 transition-colors">
                     <Icon className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-[15px] text-on-surface mb-1">{title}</h4>
+                    <h4 className="font-bold text-[15px] text-on-surface mb-0.5">{title}</h4>
                     <p className="text-on-surface-variant text-sm leading-relaxed">{desc}</p>
+                    <p className="text-primary text-xs font-bold mt-1">{benefit}</p>
                   </div>
                 </div>
               ))}
+            </div>
+
+            <div className="pt-2 border-t border-surface-container-high">
+              <p className="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-3">
+                Before it reaches you
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {trustBadges.map(({ icon: Icon, label }) => (
+                  <div
+                    key={label}
+                    className="inline-flex items-center gap-1.5 bg-surface-container px-3 py-1.5 rounded-full border border-surface-container-high"
+                  >
+                    <Icon className="w-3.5 h-3.5 text-primary" />
+                    <span className="text-xs font-semibold text-on-surface">{label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
