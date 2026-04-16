@@ -1,4 +1,4 @@
-import { Hand, ShieldCheck, Droplets, Sparkles, Sun, CheckCircle } from 'lucide-react';
+import { Hand, ShieldCheck, Droplets, Sparkles, Sun, CheckCircle, ArrowRight } from 'lucide-react';
 
 const pillars = [
   {
@@ -22,10 +22,10 @@ const pillars = [
 ];
 
 const trustBadges = [
-  { icon: Sun, label: 'Sun-Dried' },
-  { icon: Sparkles, label: 'Washed & Cleaned' },
-  { icon: CheckCircle, label: 'Quality Checked' },
-  { icon: ShieldCheck, label: 'Food Safe Processing' },
+  { icon: Sun, label: 'Sun-Dried', proof: 'No artificial drying agents' },
+  { icon: Sparkles, label: 'Washed & Cleaned', proof: 'Rinsed in clean water post-harvest' },
+  { icon: CheckCircle, label: 'Quality Checked', proof: 'Sorted & inspected before packing' },
+  { icon: ShieldCheck, label: 'Food Safe Processing', proof: 'Packed in food-grade facilities' },
 ];
 
 export function Craftsmanship() {
@@ -89,21 +89,34 @@ export function Craftsmanship() {
               ))}
             </div>
 
-            <div className="pt-2 border-t border-surface-container-high">
-              <p className="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-3">
+            <div className="pt-2 border-t border-surface-container-high space-y-4">
+              <p className="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">
                 Before it reaches you
               </p>
-              <div className="flex flex-wrap gap-2">
-                {trustBadges.map(({ icon: Icon, label }) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {trustBadges.map(({ icon: Icon, label, proof }) => (
                   <div
                     key={label}
-                    className="inline-flex items-center gap-1.5 bg-surface-container px-3 py-1.5 rounded-full border border-surface-container-high"
+                    className="flex items-start gap-2.5 bg-surface-container px-3 py-2.5 rounded-xl border border-surface-container-high"
                   >
-                    <Icon className="w-3.5 h-3.5 text-primary" />
-                    <span className="text-xs font-semibold text-on-surface">{label}</span>
+                    <div className="w-6 h-6 rounded-lg bg-primary/[0.08] flex items-center justify-center shrink-0 mt-0.5">
+                      <Icon className="w-3.5 h-3.5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-on-surface leading-none">{label}</p>
+                      <p className="text-[10px] text-on-surface-variant mt-0.5 leading-snug">{proof}</p>
+                    </div>
                   </div>
                 ))}
               </div>
+
+              <button
+                className="inline-flex items-center gap-2 text-primary font-bold text-sm border-b-2 border-primary pb-0.5 hover:gap-3 transition-all duration-200 group mt-2"
+                onClick={() => document.getElementById('shop')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                See What Makes It Different
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </button>
             </div>
           </div>
         </div>

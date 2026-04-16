@@ -121,24 +121,31 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
               willChange: 'transform',
             }}
           >
-            <div
-              style={{ opacity: cardActive ? 1 : 0, transition: 'opacity 0.2s ease', transitionDelay: cardActive ? '0.2s' : '0s' }}
-              className="flex flex-col h-full justify-between"
-            >
+            <div className="flex flex-col h-full justify-between">
               <div className="flex justify-between items-start">
-                <span className="inline-flex items-center gap-1 bg-white/10 text-white/80 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">
+                <span className="inline-flex items-center gap-1 bg-white/10 text-white/75 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border border-white/10">
                   Crispy
                 </span>
-                <span className="text-2xl opacity-50">🌶</span>
+                <span className="text-xl opacity-40">🌶</span>
               </div>
               <div>
                 <span className="inline-block bg-primary-fixed text-on-primary-fixed text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
                   Coming Soon
                 </span>
-                <h3 className="font-headline font-black text-2xl text-white leading-tight">Peri Peri</h3>
-                <p className="text-white/70 text-sm mt-1">Lightly spiced, fiery finish.</p>
-                <p className="text-white/40 text-xs mt-0.5">Airy • Crunchy • Addictive</p>
-                <div className="mt-3 inline-flex items-center gap-1.5 text-primary-fixed text-xs font-bold">
+                <h3 className="font-headline font-black text-[22px] text-white leading-tight">Peri Peri</h3>
+                <p className="text-white/65 text-sm mt-1.5 font-medium">Lightly spiced, fiery finish.</p>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <span className="w-0.5 h-0.5 rounded-full bg-white/30 inline-block" />
+                  <p className="text-white/35 text-[11px]">Airy</p>
+                  <span className="w-0.5 h-0.5 rounded-full bg-white/30 inline-block" />
+                  <p className="text-white/35 text-[11px]">Crunchy</p>
+                  <span className="w-0.5 h-0.5 rounded-full bg-white/30 inline-block" />
+                  <p className="text-white/35 text-[11px]">Addictive</p>
+                </div>
+                <div
+                  className="mt-3 inline-flex items-center gap-1.5 text-primary-fixed text-xs font-bold transition-all duration-200"
+                  style={{ opacity: cardActive ? 1 : 0, transform: cardActive ? 'translateY(0)' : 'translateY(4px)', transitionDelay: cardActive ? '0.28s' : '0s' }}
+                >
                   Explore Flavor <ArrowRight className="w-3 h-3" />
                 </div>
               </div>
@@ -157,24 +164,31 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
               willChange: 'transform',
             }}
           >
-            <div
-              style={{ opacity: cardActive ? 1 : 0, transition: 'opacity 0.2s ease', transitionDelay: cardActive ? '0.2s' : '0s' }}
-              className="flex flex-col h-full justify-between"
-            >
+            <div className="flex flex-col h-full justify-between">
               <div className="flex justify-between items-start">
-                <span className="inline-flex items-center gap-1 bg-white/10 text-white/80 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">
+                <span className="inline-flex items-center gap-1 bg-white/10 text-white/75 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border border-white/10">
                   Roasted
                 </span>
-                <span className="text-2xl opacity-50">✦</span>
+                <span className="text-xl opacity-40">✦</span>
               </div>
               <div>
                 <span className="inline-block bg-[#ffb27a] text-[#301400] text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
                   Coming Soon
                 </span>
-                <h3 className="font-headline font-black text-2xl text-white leading-tight">Black Pepper</h3>
-                <p className="text-white/70 text-sm mt-1">Warm, earthy, satisfying crunch.</p>
-                <p className="text-white/40 text-xs mt-0.5">Peppery • Bold • Clean</p>
-                <div className="mt-3 inline-flex items-center gap-1.5 text-[#ffb27a] text-xs font-bold">
+                <h3 className="font-headline font-black text-[22px] text-white leading-tight">Black Pepper</h3>
+                <p className="text-white/65 text-sm mt-1.5 font-medium">Warm, earthy, satisfying crunch.</p>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <span className="w-0.5 h-0.5 rounded-full bg-white/30 inline-block" />
+                  <p className="text-white/35 text-[11px]">Peppery</p>
+                  <span className="w-0.5 h-0.5 rounded-full bg-white/30 inline-block" />
+                  <p className="text-white/35 text-[11px]">Bold</p>
+                  <span className="w-0.5 h-0.5 rounded-full bg-white/30 inline-block" />
+                  <p className="text-white/35 text-[11px]">Clean</p>
+                </div>
+                <div
+                  className="mt-3 inline-flex items-center gap-1.5 text-[#ffb27a] text-xs font-bold transition-all duration-200"
+                  style={{ opacity: cardActive ? 1 : 0, transform: cardActive ? 'translateY(0)' : 'translateY(4px)', transitionDelay: cardActive ? '0.28s' : '0s' }}
+                >
                   Explore Flavor <ArrowRight className="w-3 h-3" />
                 </div>
               </div>
@@ -204,13 +218,20 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
                 onError={() => setImageLoaded(true)}
               />
             </div>
-            <div className="px-1 space-y-1">
+            <div className="px-1 space-y-1.5">
               <div className="flex items-center justify-between">
-                <h3 className="font-headline font-bold text-primary text-sm">The Classic</h3>
+                <h3 className="font-headline font-black text-primary text-[15px] leading-none">The Classic</h3>
                 <span className="text-[10px] bg-primary-fixed text-on-primary-fixed font-bold px-2 py-0.5 rounded-full">Airy</span>
               </div>
-              <p className="text-xs text-on-surface-variant">Lightly roasted, earthy crunch.</p>
-              <p className="text-[10px] text-on-surface-variant/60">Clean • Natural • 0 Additives</p>
+              <p className="text-xs text-on-surface-variant font-medium">Lightly roasted, earthy crunch.</p>
+              <div className="flex items-center gap-1.5">
+                <span className="w-0.5 h-0.5 rounded-full bg-on-surface-variant/30 inline-block" />
+                <p className="text-[10px] text-on-surface-variant/50">Clean</p>
+                <span className="w-0.5 h-0.5 rounded-full bg-on-surface-variant/30 inline-block" />
+                <p className="text-[10px] text-on-surface-variant/50">Natural</p>
+                <span className="w-0.5 h-0.5 rounded-full bg-on-surface-variant/30 inline-block" />
+                <p className="text-[10px] text-on-surface-variant/50">0 Additives</p>
+              </div>
             </div>
           </div>
 
