@@ -80,13 +80,6 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
               >
                 Shop Fresh Makhana
               </button>
-              <div className="flex items-center justify-center gap-2">
-                <span className="text-[10px] text-on-surface-variant/60">No preservatives</span>
-                <span className="w-0.5 h-0.5 rounded-full bg-on-surface-variant/30 inline-block" />
-                <span className="text-[10px] text-on-surface-variant/60">100% natural</span>
-                <span className="w-0.5 h-0.5 rounded-full bg-on-surface-variant/30 inline-block" />
-                <span className="text-[10px] text-on-surface-variant/60">Made fresh</span>
-              </div>
             </div>
             <button
               onClick={() => navigate('mission')}

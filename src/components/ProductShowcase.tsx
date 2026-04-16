@@ -1,4 +1,4 @@
-import { ShoppingBag, Package, ArrowRight, Star } from 'lucide-react';
+import { ShoppingBag, Package, ArrowRight } from 'lucide-react';
 
 interface ProductShowcaseProps {
   onShopCTA: () => void;
@@ -32,12 +32,6 @@ const attributes = [
   { label: 'Low calorie', icon: '↓' },
   { label: 'Vegan', icon: '✓' },
   { label: '0 additives', icon: '✓' },
-];
-
-const socialProof = [
-  { quote: "Didn't expect makhana to taste this good.", name: 'Priya M.', stars: 5 },
-  { quote: "Finally a snack that feels genuinely clean.", name: 'Rahul S.', stars: 5 },
-  { quote: "Keep reaching for another handful. That's how good.", name: 'Anika R.', stars: 5 },
 ];
 
 export function ProductShowcase({ onShopCTA }: ProductShowcaseProps) {
@@ -101,30 +95,6 @@ export function ProductShowcase({ onShopCTA }: ProductShowcaseProps) {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Social proof strip */}
-        <div className="relative overflow-hidden rounded-2xl bg-primary/[0.04] border border-primary/10 px-6 md:px-10 py-7">
-          <div className="flex items-start gap-3 mb-5">
-            <div className="flex gap-0.5 pt-0.5">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-4 h-4 fill-[#e8a000] text-[#e8a000]" />
-              ))}
-            </div>
-            <p className="text-sm font-bold text-on-surface">
-              Loved by <span className="text-primary">1,000+ snackers</span> across India
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {socialProof.map(({ quote, name }) => (
-              <div key={name} className="space-y-2">
-                <p className="text-[15px] text-on-surface font-medium leading-snug">
-                  "{quote}"
-                </p>
-                <p className="text-xs text-on-surface-variant font-semibold">— {name}</p>
-              </div>
-            ))}
-          </div>
         </div>
 
         {/* Packaging + delivery strip */}

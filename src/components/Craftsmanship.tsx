@@ -1,4 +1,4 @@
-import { Hand, ShieldCheck, Droplets, Sparkles, Sun, CheckCircle, ArrowRight } from 'lucide-react';
+import { Hand, ShieldCheck, Droplets, Sparkles, Sun, CheckCircle } from 'lucide-react';
 
 const pillars = [
   {
@@ -110,13 +110,6 @@ export function Craftsmanship() {
                 ))}
               </div>
 
-              <button
-                className="inline-flex items-center gap-2 text-primary font-bold text-sm border-b-2 border-primary pb-0.5 hover:gap-3 transition-all duration-200 group mt-2"
-                onClick={() => document.getElementById('shop')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                See What Makes It Different
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-              </button>
             </div>
           </div>
         </div>
