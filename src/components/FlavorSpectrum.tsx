@@ -1,6 +1,10 @@
 import { ArrowRight, Instagram } from 'lucide-react';
 
-export function FlavorSpectrum() {
+interface FlavorSpectrumProps {
+  onShopCTA: () => void;
+}
+
+export function FlavorSpectrum({ onShopCTA }: FlavorSpectrumProps) {
   return (
     <section id="shop" className="py-20 md:py-28 px-6 md:px-8 bg-surface-container-low">
       <div className="max-w-[1200px] mx-auto">
@@ -17,7 +21,10 @@ export function FlavorSpectrum() {
               Real ingredients, real flavour, nothing extra. Every flavor tells a different story of the soil.
             </p>
           </div>
-          <button className="text-primary font-bold flex items-center gap-2 group text-sm hover:text-primary/70 transition-colors shrink-0">
+          <button
+            onClick={onShopCTA}
+            className="text-primary font-bold flex items-center gap-2 group text-sm hover:text-primary/70 transition-colors shrink-0"
+          >
             Explore All Flavors (Coming Soon)
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
@@ -29,10 +36,10 @@ export function FlavorSpectrum() {
             style={{ filter: 'blur(12px)', transform: 'scale(1.08)' }}
           >
             {[
-              'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600',
-              'https://images.pexels.com/photos/1435735/pexels-photo-1435735.jpeg?auto=compress&cs=tinysrgb&w=600',
-              'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600',
-              'https://images.pexels.com/photos/1435735/pexels-photo-1435735.jpeg?auto=compress&cs=tinysrgb&w=600',
+              '/1st.png',
+              '/2nd.jpeg',
+              '/3rd.png',
+              '/1st.png',
             ].map((src, i) => (
               <div
                 key={i}

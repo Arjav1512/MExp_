@@ -24,7 +24,7 @@ function App() {
     setShowComingSoon(false);
     setTimeout(() => {
       document.getElementById('newsletter')?.scrollIntoView({ behavior: 'smooth' });
-    }, 100);
+    }, 250);
   };
 
   return (
@@ -37,7 +37,7 @@ function App() {
           <>
             <Hero navigate={navigate} onShopCTA={handleShopCTA} />
             <ProductShowcase onShopCTA={handleShopCTA} />
-            <FlavorSpectrum />
+            <FlavorSpectrum onShopCTA={handleShopCTA} />
             <Craftsmanship />
             <Testimonials />
             <ConversionCloser onShopCTA={handleShopCTA} />

@@ -94,7 +94,7 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
             {[
               { value: '100%', label: 'Natural' },
               { value: '0', label: 'Preservatives' },
-              { value: '1000+', label: 'Yrs Tradition' },
+              { value: '1000+', label: 'Years of Heritage' },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
                 <p className="font-headline font-black text-primary text-xl leading-none">{stat.value}</p>
@@ -145,12 +145,13 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
                   <span className="w-0.5 h-0.5 rounded-full bg-white/30 inline-block" />
                   <p className="text-white/35 text-[11px]">Addictive</p>
                 </div>
-                <div
+                <button
+                  onClick={(e) => { e.stopPropagation(); onShopCTA(); }}
                   className="mt-3 inline-flex items-center gap-1.5 text-primary-fixed text-xs font-bold transition-all duration-200"
                   style={{ opacity: cardActive ? 1 : 0, transform: cardActive ? 'translateY(0)' : 'translateY(4px)', transitionDelay: cardActive ? '0.28s' : '0s' }}
                 >
                   Explore Flavor <ArrowRight className="w-3 h-3" />
-                </div>
+                </button>
               </div>
             </div>
           </div>
@@ -188,12 +189,13 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
                   <span className="w-0.5 h-0.5 rounded-full bg-white/30 inline-block" />
                   <p className="text-white/35 text-[11px]">Clean</p>
                 </div>
-                <div
+                <button
+                  onClick={(e) => { e.stopPropagation(); onShopCTA(); }}
                   className="mt-3 inline-flex items-center gap-1.5 text-[#ffb27a] text-xs font-bold transition-all duration-200"
                   style={{ opacity: cardActive ? 1 : 0, transform: cardActive ? 'translateY(0)' : 'translateY(4px)', transitionDelay: cardActive ? '0.28s' : '0s' }}
                 >
                   Explore Flavor <ArrowRight className="w-3 h-3" />
-                </div>
+                </button>
               </div>
             </div>
           </div>
@@ -238,11 +240,9 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
             </div>
           </div>
 
-          {!isMobile && (
-            <p className="absolute -bottom-8 text-center text-xs text-on-surface-variant font-medium pointer-events-none">
-              Hover to explore flavors
-            </p>
-          )}
+          <p className="absolute -bottom-8 text-center text-xs text-on-surface-variant font-medium pointer-events-none">
+            {isMobile ? 'Tap to explore flavors' : 'Hover to explore flavors'}
+          </p>
         </div>
       </div>
     </section>

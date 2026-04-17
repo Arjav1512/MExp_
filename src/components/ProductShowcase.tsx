@@ -17,14 +17,14 @@ const shots = [
     alt: 'Hand dropping makhana foxnuts into a bowl — action shot showing the snacking moment',
     label: 'Guilt-free snacking.',
     sublabel: '0 additives. Just makhana.',
-    objectPosition: 'center 30%',
+    objectPosition: 'center 22%',
   },
   {
     src: '/3rd.png',
     alt: 'Open Makhana Express packaging box with bowl of makhana — showing the product you receive',
     label: 'Perfect snack moment.',
     sublabel: 'Ready in seconds. No prep.',
-    objectPosition: 'center center',
+    objectPosition: '40% center',
   },
 ];
 

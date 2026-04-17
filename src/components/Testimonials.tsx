@@ -16,7 +16,7 @@ const testimonials = [
     image: 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400',
   },
   {
-    name: 'Ruder P.',
+    name: 'Rohit P.',
     role: 'Fitness Enthusiast',
     text: 'Finally a snack that fits my routine — light, clean and actually satisfying. No Guilt.',
     image: 'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=400',

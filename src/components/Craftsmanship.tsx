@@ -33,7 +33,7 @@ export function Craftsmanship() {
     <section id="heritage" className="py-20 md:py-28 px-6 md:px-8">
       <div className="max-w-[1200px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          <div className="lg:col-span-7 relative">
+          <div className="lg:col-span-7 relative pb-8 md:pb-10">
             <div className="relative z-10 rounded-2xl overflow-hidden aspect-video w-full shadow-2xl">
               <img
                 className="w-full h-full object-cover object-center"
@@ -51,7 +51,7 @@ export function Craftsmanship() {
               </div>
             </div>
 
-            <div className="absolute -bottom-6 -right-4 md:-bottom-8 md:-right-8 w-40 h-40 md:w-48 md:h-48 bg-primary text-on-primary rounded-full flex flex-col items-center justify-center text-center p-4 z-20 shadow-xl shadow-primary/30">
+            <div className="absolute bottom-2 -right-2 md:-bottom-2 md:-right-6 w-36 h-36 md:w-44 md:h-44 bg-primary text-on-primary rounded-full flex flex-col items-center justify-center text-center p-4 z-20 shadow-xl shadow-primary/30">
               <span className="text-3xl font-black leading-none">100%</span>
               <span className="text-[10px] font-bold uppercase leading-tight tracking-wider mt-1 text-on-primary/80">
                 Traceable<br />Farm-to-Bag

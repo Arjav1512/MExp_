@@ -17,7 +17,7 @@ export function Newsletter() {
 
     if (honeypot) {
       setStatus('success');
-      setMessage('Check your inbox — your 20% off coupon is on its way!');
+      setMessage("You're on the list! We'll send your 20% off code when we launch.");
       return;
     }
 
@@ -74,7 +74,7 @@ export function Newsletter() {
 
         trackEvent('newsletter_success');
         setStatus('success');
-        setMessage('Check your inbox — your 20% off coupon is on its way!');
+        setMessage("You're on the list! We'll send your 20% off code when we launch.");
         setEmail('');
 
         setTimeout(() => {
@@ -173,7 +173,10 @@ export function Newsletter() {
               </div>
             )}
 
-            <p className="mt-5 text-sm text-on-primary/50 font-medium">
+            <p className="mt-4 text-xs text-on-primary/45 font-medium">
+              We respect your privacy. No spam. Unsubscribe anytime.
+            </p>
+            <p className="mt-1.5 text-xs text-on-primary/35 font-medium">
               *Offer valid for first-time customers only.
             </p>
           </div>
