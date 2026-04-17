@@ -6,22 +6,25 @@ interface ProductShowcaseProps {
 
 const shots = [
   {
-    src: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop&crop=center',
-    alt: 'Close-up of crispy white makhana foxnuts in a dark ceramic bowl — visible porous texture',
+    src: '/1st.png',
+    alt: 'Clean white makhana foxnuts in a wooden bowl on a linen cloth — pure and unprocessed',
     label: 'Light. Crunchy. Addictive.',
     sublabel: 'Feel it before the first bite',
+    objectPosition: 'center center',
   },
   {
-    src: 'https://images.pexels.com/photos/1640770/pexels-photo-1640770.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop&crop=center',
-    alt: 'Whole makhana foxnuts scattered — showing clean white colour and porous texture',
+    src: '/2nd.jpeg',
+    alt: 'Hand dropping makhana foxnuts into a bowl — action shot showing the snacking moment',
     label: 'Guilt-free snacking.',
     sublabel: '0 additives. Just makhana.',
+    objectPosition: 'center 30%',
   },
   {
-    src: 'https://images.pexels.com/photos/1435735/pexels-photo-1435735.jpeg?auto=compress&cs=tinysrgb&w=800&h=1000&fit=crop&crop=center',
-    alt: 'Bowl of makhana served as a snack at a tea-time moment — perfect ready-to-eat size',
+    src: '/3rd.png',
+    alt: 'Open Makhana Express packaging box with bowl of makhana — showing the product you receive',
     label: 'Perfect snack moment.',
     sublabel: 'Ready in seconds. No prep.',
+    objectPosition: 'center center',
   },
 ];
 
@@ -66,7 +69,7 @@ export function ProductShowcase({ onShopCTA }: ProductShowcaseProps) {
 
         {/* Photo grid — craving triggers */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {shots.map(({ src, alt, label, sublabel }) => (
+          {shots.map(({ src, alt, label, sublabel, objectPosition }) => (
             <div
               key={label}
               className="group relative rounded-2xl overflow-hidden bg-stone-100"
@@ -76,6 +79,7 @@ export function ProductShowcase({ onShopCTA }: ProductShowcaseProps) {
                 src={src}
                 alt={alt}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                style={{ objectPosition }}
                 loading="lazy"
                 width={480}
                 height={600}
