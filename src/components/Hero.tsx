@@ -1,8 +1,10 @@
 import { Zap, ArrowRight } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { SkeletonHeroCard } from './Skeleton';
 import type { Page } from '../lib/router';
 import { trackCTAClick } from '../lib/analytics';
+import { fadeUp, fadeIn, staggerContainer } from '../lib/motion';
 
 interface HeroProps {
   navigate: (page: Page) => void;
@@ -38,19 +40,32 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
   return (
     <section id="home" className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden px-6 md:px-8">
       <div className="absolute inset-0 pointer-events-none select-none overflow-hidden flex items-center justify-center">
-        <span className="text-[28vw] font-black text-on-surface opacity-[0.025] leading-none tracking-tighter">
+        <motion.span
+          className="text-[28vw] font-black text-on-surface opacity-[0.025] leading-none tracking-tighter"
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 0.025, scale: 1 }}
+          transition={{ duration: 1.2, ease: 'easeOut' }}
+        >
           MAKHANA
-        </span>
+        </motion.span>
       </div>
 
       <div className="max-w-[1200px] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center relative z-10 pt-[68px]">
-        <div className="space-y-5 lg:space-y-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary-fixed/60 text-primary font-bold text-xs uppercase tracking-widest border border-primary-fixed">
+        <motion.div
+          className="space-y-5 lg:space-y-6"
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.div
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary-fixed/60 text-primary font-bold text-xs uppercase tracking-widest border border-primary-fixed"
+            variants={fadeUp}
+          >
             <Zap className="w-3.5 h-3.5" />
             Snack Better. Live Better.
-          </div>
+          </motion.div>
 
-          <div className="space-y-2">
+          <motion.div className="space-y-2" variants={fadeUp}>
             <h1
               style={{ fontSize: 'clamp(3rem, 7vw, 5rem)', lineHeight: '0.88', letterSpacing: '-0.03em' }}
               className="font-headline font-black text-primary"
@@ -69,48 +84,61 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
             >
               No junk. No preservatives. Just good.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="flex flex-wrap gap-3 pt-1">
+          <motion.div className="flex flex-wrap gap-3 pt-1" variants={fadeUp}>
             <div className="flex flex-col gap-1.5">
-              <button
+              <motion.button
                 onClick={() => { trackCTAClick('Shop', 'coming-soon-modal'); onShopCTA(); }}
-                className="inline-flex items-center justify-center gap-2 bg-primary text-on-primary font-black text-base px-10 py-4 rounded-xl transition-all duration-200 hover:brightness-110 hover:scale-[1.02] active:scale-[0.97]"
+                className="inline-flex items-center justify-center gap-2 bg-primary text-on-primary font-black text-base px-10 py-4 rounded-xl transition-colors duration-200"
                 style={{ boxShadow: '0 4px 24px rgba(21,66,18,0.35), 0 1px 4px rgba(21,66,18,0.2)' }}
+                whileHover={{ scale: 1.03, filter: 'brightness(1.08)' }}
+                whileTap={{ scale: 0.96 }}
               >
                 Shop Fresh Makhana
-              </button>
+              </motion.button>
             </div>
-            <button
+            <motion.button
               onClick={() => navigate('mission')}
               className="btn-secondary text-base px-8 py-4 inline-flex items-center gap-2 group self-start"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
             >
               Our Mission
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
 
-          <div className="flex items-center gap-6 pt-2">
+          <motion.div className="flex items-center gap-6 pt-2" variants={fadeUp}>
             {[
               { value: '100%', label: 'Natural' },
               { value: '0', label: 'Preservatives' },
               { value: '1000+', label: 'Years of Heritage' },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
+            ].map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                className="text-center"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + i * 0.1, duration: 0.4 }}
+              >
                 <p className="font-headline font-black text-primary text-xl leading-none">{stat.value}</p>
                 <p className="text-on-surface-variant text-[11px] font-semibold uppercase tracking-wide mt-0.5">{stat.label}</p>
-              </div>
+              </motion.div>
             ))}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <div
+        <motion.div
           ref={stackRef}
           className="relative h-[480px] md:h-[560px] flex justify-center items-center cursor-pointer"
           onMouseEnter={() => !isMobile && setCardActive(true)}
           onMouseLeave={() => !isMobile && setCardActive(false)}
           onClick={() => isMobile && setCardActive(prev => !prev)}
           aria-label="Interactive product card stack — hover to explore flavors"
+          variants={fadeIn}
+          initial="hidden"
+          animate="visible"
         >
           {/* Card 1 – Green (Peri Peri) */}
           <div
@@ -240,10 +268,15 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
             </div>
           </div>
 
-          <p className="absolute -bottom-8 text-center text-xs text-on-surface-variant font-medium pointer-events-none">
+          <motion.p
+            className="absolute -bottom-8 text-center text-xs text-on-surface-variant font-medium pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.9, duration: 0.5 }}
+          >
             {isMobile ? 'Tap to explore flavors' : 'Hover to explore flavors'}
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
       </div>
     </section>
   );

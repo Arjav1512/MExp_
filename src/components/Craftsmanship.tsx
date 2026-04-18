@@ -1,4 +1,6 @@
 import { Hand, ShieldCheck, Droplets, Sparkles, Sun, CheckCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { fadeUp, fadeLeft, staggerContainer, staggerContainerFast, viewportOptions } from '../lib/motion';
 
 const pillars = [
   {
@@ -33,7 +35,13 @@ export function Craftsmanship() {
     <section id="heritage" className="py-20 md:py-28 px-6 md:px-8">
       <div className="max-w-[1200px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          <div className="lg:col-span-7 relative pb-8 md:pb-10">
+          <motion.div
+            className="lg:col-span-7 relative pb-8 md:pb-10"
+            variants={fadeLeft}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOptions}
+          >
             <div className="relative z-10 rounded-2xl overflow-hidden aspect-video w-full shadow-2xl">
               <img
                 className="w-full h-full object-cover object-center"
@@ -51,16 +59,28 @@ export function Craftsmanship() {
               </div>
             </div>
 
-            <div className="absolute bottom-2 -right-2 md:-bottom-2 md:-right-6 w-36 h-36 md:w-44 md:h-44 bg-primary text-on-primary rounded-full flex flex-col items-center justify-center text-center p-4 z-20 shadow-xl shadow-primary/30">
+            <motion.div
+              className="absolute bottom-2 -right-2 md:-bottom-2 md:-right-6 w-36 h-36 md:w-44 md:h-44 bg-primary text-on-primary rounded-full flex flex-col items-center justify-center text-center p-4 z-20 shadow-xl shadow-primary/30"
+              initial={{ scale: 0, rotate: -20 }}
+              whileInView={{ scale: 1, rotate: 0 }}
+              viewport={viewportOptions}
+              transition={{ delay: 0.3, type: 'spring', stiffness: 260, damping: 22 }}
+            >
               <span className="text-3xl font-black leading-none">100%</span>
               <span className="text-[10px] font-bold uppercase leading-tight tracking-wider mt-1 text-on-primary/80">
                 Traceable<br />Farm-to-Bag
               </span>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
-          <div className="lg:col-span-5 space-y-6">
-            <div className="space-y-3">
+          <motion.div
+            className="lg:col-span-5 space-y-6"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOptions}
+          >
+            <motion.div className="space-y-3" variants={fadeUp}>
               <span className="section-label">Heritage</span>
               <h2
                 style={{ fontSize: 'clamp(1.875rem, 3.25vw, 2.5rem)', letterSpacing: '-0.02em' }}
@@ -72,11 +92,20 @@ export function Craftsmanship() {
                 From clean water ponds to your hands — every step is intentional, traceable, and honest.
               </p>
               <div className="divider" />
-            </div>
+            </motion.div>
 
-            <div className="space-y-4">
+            <motion.div
+              className="space-y-4"
+              variants={staggerContainerFast}
+            >
               {pillars.map(({ icon: Icon, title, desc, benefit }) => (
-                <div key={title} className="flex gap-4 group">
+                <motion.div
+                  key={title}
+                  className="flex gap-4 group"
+                  variants={fadeUp}
+                  whileHover={{ x: 4 }}
+                  transition={{ duration: 0.2 }}
+                >
                   <div className="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center shrink-0 group-hover:bg-primary/10 transition-colors">
                     <Icon className="w-5 h-5 text-primary" />
                   </div>
@@ -85,19 +114,26 @@ export function Craftsmanship() {
                     <p className="text-on-surface-variant text-sm leading-relaxed">{desc}</p>
                     <p className="text-primary text-xs font-bold mt-1">{benefit}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
 
-            <div className="pt-2 border-t border-surface-container-high space-y-4">
+            <motion.div
+              className="pt-2 border-t border-surface-container-high space-y-4"
+              variants={fadeUp}
+            >
               <p className="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">
                 Before it reaches you
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {trustBadges.map(({ icon: Icon, label, proof }) => (
-                  <div
+                {trustBadges.map(({ icon: Icon, label, proof }, i) => (
+                  <motion.div
                     key={label}
                     className="flex items-start gap-2.5 bg-surface-container px-3 py-2.5 rounded-xl border border-surface-container-high"
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={viewportOptions}
+                    transition={{ delay: 0.3 + i * 0.08, duration: 0.35 }}
                   >
                     <div className="w-6 h-6 rounded-lg bg-primary/[0.08] flex items-center justify-center shrink-0 mt-0.5">
                       <Icon className="w-3.5 h-3.5 text-primary" />
@@ -106,12 +142,11 @@ export function Craftsmanship() {
                       <p className="text-xs font-bold text-on-surface leading-none">{label}</p>
                       <p className="text-[10px] text-on-surface-variant mt-0.5 leading-snug">{proof}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
-
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
     </section>

@@ -1,6 +1,8 @@
 import { Star, Quote } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { SkeletonTestimonialCard, SkeletonAvatar } from './Skeleton';
+import { fadeUp, staggerContainerFast, viewportOptions } from '../lib/motion';
 
 const testimonials = [
   {
@@ -23,20 +25,29 @@ const testimonials = [
   },
 ];
 
-function TestimonialCard({ testimonial, featured }: { testimonial: typeof testimonials[0]; featured?: boolean }) {
+function TestimonialCard({ testimonial, featured, index }: { testimonial: typeof testimonials[0]; featured?: boolean; index: number }) {
   const [imgLoaded, setImgLoaded] = useState(false);
 
   return (
-    <div
-      className={`card-base p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col ${
-        featured ? 'lg:mt-6' : ''
-      }`}
+    <motion.div
+      className={`card-base p-6 flex flex-col ${featured ? 'lg:mt-6' : ''}`}
+      variants={fadeUp}
+      whileHover={{ y: -6, boxShadow: '0 20px 48px rgba(0,0,0,0.12)' }}
+      transition={{ duration: 0.25 }}
     >
       <Quote className="w-6 h-6 text-primary-fixed mb-4 shrink-0" aria-hidden="true" />
 
       <div className="flex gap-0.5 mb-4" role="img" aria-label="5 out of 5 stars">
         {[...Array(5)].map((_, i) => (
-          <Star key={i} className="w-4 h-4 fill-[#e8a000] text-[#e8a000]" aria-hidden="true" />
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, scale: 0.5 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={viewportOptions}
+            transition={{ delay: 0.2 + index * 0.1 + i * 0.05, duration: 0.25, type: 'spring' }}
+          >
+            <Star className="w-4 h-4 fill-[#e8a000] text-[#e8a000]" aria-hidden="true" />
+          </motion.div>
         ))}
       </div>
 
@@ -59,7 +70,7 @@ function TestimonialCard({ testimonial, featured }: { testimonial: typeof testim
           <p className="text-xs text-on-surface-variant mt-0.5">{testimonial.role}</p>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -73,7 +84,13 @@ export function Testimonials() {
   return (
     <section id="community" className="py-20 md:py-28 px-6 md:px-8 bg-surface-dim">
       <div className="max-w-[1200px] mx-auto">
-        <div className="text-center mb-12 space-y-3">
+        <motion.div
+          className="text-center mb-12 space-y-3"
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOptions}
+        >
           <span className="section-label">Community</span>
           <h2
             style={{ fontSize: 'clamp(2rem, 3.75vw, 2.75rem)', letterSpacing: '-0.02em' }}
@@ -84,16 +101,22 @@ export function Testimonials() {
           <p className="text-base text-on-surface-variant max-w-md mx-auto leading-relaxed">
             Honest snacking, done right — with nothing to hide and everything to love.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start"
+          variants={staggerContainerFast}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOptions}
+        >
           {!mounted
             ? testimonials.map((_, i) => <SkeletonTestimonialCard key={i} offset={i === 1} />)
             : testimonials.map((testimonial, i) => (
-                <TestimonialCard key={i} testimonial={testimonial} featured={i === 1} />
+                <TestimonialCard key={i} testimonial={testimonial} featured={i === 1} index={i} />
               ))
           }
-        </div>
+        </motion.div>
       </div>
     </section>
   );

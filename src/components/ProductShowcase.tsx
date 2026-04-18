@@ -1,4 +1,6 @@
 import { ShoppingBag, Package, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { fadeUp, fadeLeft, fadeRight, staggerContainer, staggerContainerFast, viewportOptions } from '../lib/motion';
 
 interface ProductShowcaseProps {
   onShopCTA: () => void;
@@ -42,9 +44,14 @@ export function ProductShowcase({ onShopCTA }: ProductShowcaseProps) {
     <section className="py-20 md:py-28 px-6 md:px-8 bg-surface-container-lowest border-y border-surface-container-high">
       <div className="max-w-[1200px] mx-auto space-y-12">
 
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-5">
-          <div className="space-y-3">
+        <motion.div
+          className="flex flex-col md:flex-row justify-between items-start md:items-end gap-5"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOptions}
+        >
+          <motion.div className="space-y-3" variants={fadeLeft}>
             <span className="section-label">The Product</span>
             <h2
               style={{ fontSize: 'clamp(1.875rem, 3.25vw, 2.5rem)', letterSpacing: '-0.02em' }}
@@ -56,24 +63,35 @@ export function ProductShowcase({ onShopCTA }: ProductShowcaseProps) {
               Pure, whole makhana — clean, light, and satisfying. You can see the texture.
               That's how you know it's real.
             </p>
-          </div>
-          <button
+          </motion.div>
+          <motion.button
             onClick={onShopCTA}
-            className="btn-primary shrink-0 hover:scale-[1.02] transition-transform duration-150"
+            className="btn-primary shrink-0"
             style={{ boxShadow: '0 4px 20px rgba(21,66,18,0.28)' }}
+            variants={fadeRight}
+            whileHover={{ scale: 1.04, filter: 'brightness(1.08)' }}
+            whileTap={{ scale: 0.96 }}
           >
             <ShoppingBag className="w-4 h-4" />
             Shop Fresh Makhana
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
 
-        {/* Photo grid — craving triggers */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {shots.map(({ src, alt, label, sublabel, objectPosition }) => (
-            <div
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-4"
+          variants={staggerContainerFast}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOptions}
+        >
+          {shots.map(({ src, alt, label, sublabel, objectPosition }, i) => (
+            <motion.div
               key={label}
               className="group relative rounded-2xl overflow-hidden bg-stone-100"
               style={{ aspectRatio: '4/5', boxShadow: '0 4px 24px rgba(0,0,0,0.09)' }}
+              variants={fadeUp}
+              whileHover={{ y: -6, boxShadow: '0 16px 48px rgba(0,0,0,0.16)' }}
+              transition={{ delay: i * 0.05 }}
             >
               <img
                 src={src}
@@ -84,27 +102,28 @@ export function ProductShowcase({ onShopCTA }: ProductShowcaseProps) {
                 width={480}
                 height={600}
               />
-              {/* Bottom gradient for legibility */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
-              {/* Top-right craving chip */}
               <div className="absolute top-3.5 right-3.5">
                 <span className="bg-white/10 backdrop-blur-sm border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">
                   Fresh batch
                 </span>
               </div>
-              {/* Bottom copy */}
               <div className="absolute bottom-4 left-4 right-4">
                 <p className="text-white font-black text-[15px] leading-tight">{label}</p>
                 <p className="text-white/60 text-[11px] font-medium mt-0.5">{sublabel}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        {/* Packaging + delivery strip */}
-        <div className="bg-surface-container rounded-2xl border border-surface-container-high overflow-hidden">
+        <motion.div
+          className="bg-surface-container rounded-2xl border border-surface-container-high overflow-hidden"
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOptions}
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-            {/* Left — packaging info */}
             <div className="flex flex-col justify-center gap-4 px-8 py-8 border-b md:border-b-0 md:border-r border-surface-container-high">
               <div className="w-10 h-10 rounded-xl bg-primary/[0.08] flex items-center justify-center">
                 <Package className="w-5 h-5 text-primary" />
@@ -131,7 +150,6 @@ export function ProductShowcase({ onShopCTA }: ProductShowcaseProps) {
               </div>
             </div>
 
-            {/* Right — product attributes */}
             <div className="px-8 py-8">
               <p className="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-5">
                 What's inside every pack
@@ -148,21 +166,27 @@ export function ProductShowcase({ onShopCTA }: ProductShowcaseProps) {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Inline secondary CTA */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-2">
+        <motion.div
+          className="flex flex-col sm:flex-row items-center justify-between gap-4 py-2"
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOptions}
+        >
           <p className="text-on-surface-variant text-sm font-medium text-center sm:text-left">
             Fresh batches made weekly — don't miss yours.
           </p>
-          <button
+          <motion.button
             onClick={onShopCTA}
-            className="inline-flex items-center gap-2 text-primary font-bold text-sm border-b-2 border-primary pb-0.5 hover:gap-3 transition-all duration-200 group shrink-0"
+            className="inline-flex items-center gap-2 text-primary font-bold text-sm border-b-2 border-primary pb-0.5 shrink-0 group"
+            whileHover={{ gap: '12px' }}
           >
             Get Your First Pack
             <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
 
       </div>
     </section>

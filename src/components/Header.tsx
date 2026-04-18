@@ -1,5 +1,6 @@
 import { Menu, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { Page } from '../lib/router';
 import { trackCTAClick } from '../lib/analytics';
 
@@ -48,12 +49,13 @@ export function Header({ page, navigate, onShopCTA }: HeaderProps) {
       }}
     >
       <div className="flex justify-between items-center px-6 md:px-8 h-[68px] max-w-[1200px] mx-auto">
-        <button
+        <motion.button
           className="font-headline font-black text-lg text-primary tracking-tighter hover:opacity-70 transition-opacity"
           onClick={() => { setIsMenuOpen(false); navigate('home'); window.scrollTo({ top: 0 }); }}
+          whileTap={{ scale: 0.96 }}
         >
           Makhana Express
-        </button>
+        </motion.button>
 
         <nav className="hidden md:flex items-center gap-0.5" aria-label="Main navigation">
           <NavButton label="Home" active={page === 'home'} onClick={() => { navigate('home'); window.scrollTo({ top: 0 }); }} />
@@ -63,66 +65,97 @@ export function Header({ page, navigate, onShopCTA }: HeaderProps) {
         </nav>
 
         <div className="flex items-center gap-3">
-          <button
+          <motion.button
             className="btn-primary hidden md:inline-flex"
             onClick={() => { trackCTAClick('Order Now', 'coming-soon-modal'); setIsMenuOpen(false); onShopCTA(); }}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.96 }}
           >
             Order Now
-          </button>
-          <button
+          </motion.button>
+          <motion.button
             className="md:hidden w-9 h-9 rounded-lg flex items-center justify-center text-primary hover:bg-surface-container transition-colors"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isMenuOpen}
+            whileTap={{ scale: 0.9 }}
           >
-            {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+            <AnimatePresence mode="wait" initial={false}>
+              {isMenuOpen ? (
+                <motion.span key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.18 }}>
+                  <X className="w-5 h-5" />
+                </motion.span>
+              ) : (
+                <motion.span key="open" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.18 }}>
+                  <Menu className="w-5 h-5" />
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
         </div>
       </div>
 
-      {isMenuOpen && (
-        <div className="md:hidden bg-background border-t border-surface-container-high px-6 py-5 animate-slide-down">
-          <nav className="flex flex-col gap-0.5" aria-label="Mobile navigation">
-            {[
-              { label: 'Home', action: () => { setIsMenuOpen(false); navigate('home'); window.scrollTo({ top: 0 }); } },
-              { label: 'Heritage', action: () => handleNav('heritage') },
-              { label: 'Community', action: () => handleNav('community') },
-              { label: 'Our Mission', action: () => handleNav('mission') },
-            ].map((item) => (
-              <button
-                key={item.label}
-                className="text-left px-3 py-2.5 rounded-lg font-bold text-sm text-on-surface hover:bg-surface-container hover:text-primary transition-colors"
-                onClick={item.action}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            className="md:hidden bg-background border-t border-surface-container-high px-6 py-5 overflow-hidden"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
+          >
+            <nav className="flex flex-col gap-0.5" aria-label="Mobile navigation">
+              {[
+                { label: 'Home', action: () => { setIsMenuOpen(false); navigate('home'); window.scrollTo({ top: 0 }); } },
+                { label: 'Heritage', action: () => handleNav('heritage') },
+                { label: 'Community', action: () => handleNav('community') },
+                { label: 'Our Mission', action: () => handleNav('mission') },
+              ].map((item, i) => (
+                <motion.button
+                  key={item.label}
+                  className="text-left px-3 py-2.5 rounded-lg font-bold text-sm text-on-surface hover:bg-surface-container hover:text-primary transition-colors"
+                  onClick={item.action}
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.06, duration: 0.2 }}
+                >
+                  {item.label}
+                </motion.button>
+              ))}
+              <motion.div
+                className="mt-3 pt-3 border-t border-surface-container-high"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.28, duration: 0.2 }}
               >
-                {item.label}
-              </button>
-            ))}
-            <div className="mt-3 pt-3 border-t border-surface-container-high">
-              <button
-                className="btn-primary w-full"
-                onClick={() => { trackCTAClick('Order Now', 'coming-soon-modal'); setIsMenuOpen(false); onShopCTA(); }}
-              >
-                Order Now
-              </button>
-            </div>
-          </nav>
-        </div>
-      )}
+                <motion.button
+                  className="btn-primary w-full"
+                  onClick={() => { trackCTAClick('Order Now', 'coming-soon-modal'); setIsMenuOpen(false); onShopCTA(); }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  Order Now
+                </motion.button>
+              </motion.div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
 
 function NavButton({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
   return (
-    <button
+    <motion.button
       onClick={onClick}
       className={`font-bold text-[11px] tracking-widest uppercase px-3.5 py-2 rounded-lg transition-all duration-200 ${
         active
           ? 'text-primary bg-primary/[0.08]'
           : 'text-on-surface-variant hover:text-primary hover:bg-surface-container'
       }`}
+      whileTap={{ scale: 0.94 }}
     >
       {label}
-    </button>
+    </motion.button>
   );
 }

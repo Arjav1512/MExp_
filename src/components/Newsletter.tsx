@@ -1,7 +1,9 @@
 import { CheckCircle, AlertCircle, Send } from 'lucide-react';
 import { useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../lib/supabase';
 import { trackEvent } from '../lib/analytics';
+import { fadeUp, staggerContainer, viewportOptions } from '../lib/motion';
 
 const RATE_LIMIT_MS = 60_000;
 
@@ -93,29 +95,52 @@ export function Newsletter() {
   return (
     <section id="newsletter" className="py-8 px-6 md:px-8">
       <div className="max-w-[1200px] mx-auto">
-        <div className="relative bg-primary rounded-2xl overflow-hidden">
+        <motion.div
+          className="relative bg-primary rounded-2xl overflow-hidden"
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={viewportOptions}
+          transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+        >
           <div className="absolute inset-0 pointer-events-none select-none overflow-hidden flex items-center justify-center">
             <span className="text-[18vw] font-black text-white/[0.04] leading-none tracking-tighter">
               EXPRESS
             </span>
           </div>
 
-          <div className="relative z-10 px-8 md:px-16 py-14 text-center flex flex-col items-center">
-            <span className="inline-block bg-primary-fixed/20 border border-primary-fixed/40 text-primary-fixed text-[11px] font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
+          <motion.div
+            className="relative z-10 px-8 md:px-16 py-14 text-center flex flex-col items-center"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOptions}
+          >
+            <motion.span
+              className="inline-block bg-primary-fixed/20 border border-primary-fixed/40 text-primary-fixed text-[11px] font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6"
+              variants={fadeUp}
+            >
               Join the Community
-            </span>
+            </motion.span>
 
-            <h2
+            <motion.h2
               style={{ fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', letterSpacing: '-0.02em' }}
               className="font-headline font-black text-on-primary mb-3 leading-tight"
+              variants={fadeUp}
             >
               From Pond To Pack,<br />Done Right
-            </h2>
-            <p className="text-on-primary/70 text-base mb-8 max-w-lg leading-relaxed">
+            </motion.h2>
+            <motion.p
+              className="text-on-primary/70 text-base mb-8 max-w-lg leading-relaxed"
+              variants={fadeUp}
+            >
               Join our journey and get 20% off on your first order. Authentic makhana, crafted with care.
-            </p>
+            </motion.p>
 
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
+            <motion.form
+              onSubmit={handleSubmit}
+              className="flex flex-col sm:flex-row gap-3 w-full max-w-md"
+              variants={fadeUp}
+            >
               <input
                 type="text"
                 name="website"
@@ -143,35 +168,53 @@ export function Newsletter() {
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={status === 'success'}
                   />
-                  <button
+                  <motion.button
                     type="submit"
                     disabled={status === 'success'}
-                    className="inline-flex items-center justify-center gap-2 bg-primary-fixed text-on-primary-fixed font-bold text-sm px-6 py-3 rounded-xl hover:brightness-105 transition-all active:scale-[0.97] disabled:opacity-60 whitespace-nowrap"
+                    className="inline-flex items-center justify-center gap-2 bg-primary-fixed text-on-primary-fixed font-bold text-sm px-6 py-3 rounded-xl disabled:opacity-60 whitespace-nowrap"
+                    whileHover={{ scale: 1.04, filter: 'brightness(1.06)' }}
+                    whileTap={{ scale: 0.96 }}
                   >
                     <Send className="w-4 h-4" />
                     Join & Save 20%
-                  </button>
+                  </motion.button>
                 </>
               )}
-            </form>
+            </motion.form>
 
-            {status === 'success' && (
-              <div className="mt-5 animate-fade-in">
-                <div className="inline-flex items-center gap-2.5 bg-white/15 backdrop-blur-sm text-white px-5 py-3 rounded-full border border-white/20">
-                  <CheckCircle className="w-5 h-5 shrink-0 text-primary-fixed" />
-                  <span className="font-semibold text-sm">{message}</span>
-                </div>
-              </div>
-            )}
+            <AnimatePresence>
+              {status === 'success' && (
+                <motion.div
+                  className="mt-5"
+                  key="success"
+                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                  transition={{ duration: 0.3, type: 'spring' }}
+                >
+                  <div className="inline-flex items-center gap-2.5 bg-white/15 backdrop-blur-sm text-white px-5 py-3 rounded-full border border-white/20">
+                    <CheckCircle className="w-5 h-5 shrink-0 text-primary-fixed" />
+                    <span className="font-semibold text-sm">{message}</span>
+                  </div>
+                </motion.div>
+              )}
 
-            {status === 'error' && (
-              <div className="mt-5 animate-fade-in">
-                <div className="inline-flex items-center gap-2.5 bg-red-500/15 text-white px-5 py-3 rounded-full border border-red-400/30">
-                  <AlertCircle className="w-5 h-5 shrink-0" />
-                  <span className="font-semibold text-sm">{message}</span>
-                </div>
-              </div>
-            )}
+              {status === 'error' && (
+                <motion.div
+                  className="mt-5"
+                  key="error"
+                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                  transition={{ duration: 0.3, type: 'spring' }}
+                >
+                  <div className="inline-flex items-center gap-2.5 bg-red-500/15 text-white px-5 py-3 rounded-full border border-red-400/30">
+                    <AlertCircle className="w-5 h-5 shrink-0" />
+                    <span className="font-semibold text-sm">{message}</span>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <p className="mt-4 text-xs text-on-primary/45 font-medium">
               We respect your privacy. No spam. Unsubscribe anytime.
@@ -179,8 +222,8 @@ export function Newsletter() {
             <p className="mt-1.5 text-xs text-on-primary/35 font-medium">
               *Offer valid for first-time customers only.
             </p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

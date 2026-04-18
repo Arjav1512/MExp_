@@ -1,5 +1,7 @@
 import { ArrowLeft, Droplets, Hand, Leaf, ShieldCheck, Heart, Sprout, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 import type { Page } from '../lib/router';
+import { fadeUp, fadeRight, staggerContainer, staggerContainerFast, viewportOptions } from '../lib/motion';
 
 interface OurMissionProps {
   navigate: (page: Page) => void;
@@ -44,43 +46,64 @@ export function OurMission({ navigate, onShopCTA }: OurMissionProps) {
   return (
     <div className="min-h-screen pt-[68px]">
       <div className="max-w-[1200px] mx-auto px-6 md:px-8 pt-8 pb-4">
-        <button
+        <motion.button
           onClick={() => { navigate('home'); window.scrollTo({ top: 0 }); }}
           className="inline-flex items-center gap-2 text-sm font-bold text-on-surface-variant hover:text-primary transition-colors group"
+          initial={{ opacity: 0, x: -12 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.35 }}
+          whileHover={{ x: -4 }}
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           Back to Home
-        </button>
+        </motion.button>
       </div>
 
       {/* Hero */}
       <section className="max-w-[1200px] mx-auto px-6 md:px-8 py-12 md:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          <div className="space-y-6">
-            <span className="section-label">
+          <motion.div
+            className="space-y-6"
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.span className="section-label" variants={fadeUp}>
               <Sprout className="w-3.5 h-3.5" />
               Our Mission
-            </span>
-            <h1
+            </motion.span>
+            <motion.h1
               style={{ fontSize: 'clamp(2.5rem, 5.5vw, 4rem)', letterSpacing: '-0.03em', lineHeight: '0.95' }}
               className="font-headline font-black text-primary"
+              variants={fadeUp}
             >
               Snack Better.<br />Choose Better.
-            </h1>
+            </motion.h1>
             <div className="divider" />
-            <p className="text-base md:text-lg text-on-surface-variant leading-relaxed max-w-lg">
+            <motion.p
+              className="text-base md:text-lg text-on-surface-variant leading-relaxed max-w-lg"
+              variants={fadeUp}
+            >
               We started Makhana Express to bring snacking back to its roots — pure makhana from Bihar's ponds, handled with care, and nothing added along the way.
-            </p>
-            <button
+            </motion.p>
+            <motion.button
               onClick={onShopCTA}
               className="btn-primary text-[15px] px-8 py-3.5"
+              variants={fadeUp}
+              whileHover={{ scale: 1.03, filter: 'brightness(1.08)' }}
+              whileTap={{ scale: 0.97 }}
             >
               <Heart className="w-4 h-4" />
               Shop Better Snacks
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
 
-          <div className="relative">
+          <motion.div
+            className="relative"
+            variants={fadeRight}
+            initial="hidden"
+            animate="visible"
+          >
             <div className="relative rounded-2xl overflow-hidden aspect-square w-full max-w-md mx-auto shadow-2xl">
               <img
                 src="/generated-1775775918458-v7v8t.webp"
@@ -97,11 +120,16 @@ export function OurMission({ navigate, onShopCTA }: OurMissionProps) {
                 </p>
               </div>
             </div>
-            <div className="absolute -top-4 -right-4 md:-top-5 md:-right-5 w-20 h-20 md:w-24 md:h-24 bg-primary-fixed rounded-2xl flex flex-col items-center justify-center text-center shadow-xl rotate-3">
+            <motion.div
+              className="absolute -top-4 -right-4 md:-top-5 md:-right-5 w-20 h-20 md:w-24 md:h-24 bg-primary-fixed rounded-2xl flex flex-col items-center justify-center text-center shadow-xl rotate-3"
+              initial={{ scale: 0, rotate: 12 }}
+              animate={{ scale: 1, rotate: 3 }}
+              transition={{ delay: 0.4, type: 'spring', stiffness: 300, damping: 22 }}
+            >
               <span className="text-lg font-black text-primary leading-none">Pure</span>
               <span className="text-[10px] font-bold text-primary/70 uppercase tracking-wide mt-0.5">Always</span>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
@@ -133,11 +161,19 @@ export function OurMission({ navigate, onShopCTA }: OurMissionProps) {
             </h2>
             <p className="text-on-surface-variant text-base">Real impact, measured honestly.</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
+          <motion.div
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5"
+            variants={staggerContainerFast}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOptions}
+          >
             {impacts.map((item) => (
-              <div
+              <motion.div
                 key={item.stat}
-                className="card-base p-6 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+                className="card-base p-6 text-center"
+                variants={fadeUp}
+                whileHover={{ y: -4, boxShadow: '0 12px 32px rgba(0,0,0,0.10)' }}
               >
                 <p
                   className="font-headline font-black text-primary mb-1.5 leading-none"
@@ -146,9 +182,9 @@ export function OurMission({ navigate, onShopCTA }: OurMissionProps) {
                   {item.stat}
                 </p>
                 <p className="text-on-surface-variant text-sm font-medium leading-snug">{item.label}</p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -165,13 +201,21 @@ export function OurMission({ navigate, onShopCTA }: OurMissionProps) {
             </h2>
             <p className="text-on-surface-variant text-base">Every decision we make starts here.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            variants={staggerContainerFast}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOptions}
+          >
             {values.map((value) => {
               const Icon = value.icon;
               return (
-                <div
+                <motion.div
                   key={value.title}
-                  className="card-base p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex gap-4"
+                  className="card-base p-6 flex gap-4"
+                  variants={fadeUp}
+                  whileHover={{ y: -4, boxShadow: '0 12px 32px rgba(0,0,0,0.10)' }}
                 >
                   <div className="w-11 h-11 rounded-xl bg-primary/[0.08] flex items-center justify-center shrink-0">
                     <Icon className="w-5 h-5 text-primary" />
@@ -180,10 +224,10 @@ export function OurMission({ navigate, onShopCTA }: OurMissionProps) {
                     <h3 className="font-bold text-[15px] text-on-surface">{value.title}</h3>
                     <p className="text-on-surface-variant text-sm leading-relaxed">{value.description}</p>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         </div>
       </section>
 
