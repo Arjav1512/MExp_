@@ -36,8 +36,8 @@ export function Newsletter() {
       return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    const emailRegex = /^[a-zA-Z0-9]([a-zA-Z0-9._%+\-]*[a-zA-Z0-9])?@[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email) || email.length > 320) {
       setStatus('error');
       setMessage('Please enter a valid email address');
       return;
@@ -60,18 +60,30 @@ export function Newsletter() {
           throw error;
         }
       } else {
-        const emailRes = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-welcome-email`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email }),
-        });
+        try {
+          const emailRes = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-welcome-email`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }),
+          });
 
-        if (!emailRes.ok) {
-          const errData = await emailRes.json().catch(() => ({}));
-          console.error('Email send failed:', errData);
+          if (!emailRes.ok) {
+            const errData = await emailRes.json().catch(() => ({}));
+            console.error('Email send failed:', errData);
+            trackEvent('newsletter_error');
+            setStatus('error');
+            setMessage("You're subscribed, but we couldn't send your coupon. Please contact us at info@makhana-express.com.");
+            return;
+          }
+        } catch (emailErr) {
+          console.error('Email service unreachable:', emailErr);
+          trackEvent('newsletter_error');
+          setStatus('error');
+          setMessage("You're subscribed, but we couldn't send your coupon. Please contact us at info@makhana-express.com.");
+          return;
         }
 
         trackEvent('newsletter_success');
