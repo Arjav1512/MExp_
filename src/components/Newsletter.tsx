@@ -61,22 +61,25 @@ export function Newsletter() {
         }
       } else {
         try {
+          const requestId = crypto.randomUUID();
           const emailRes = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-welcome-email`, {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
               'Content-Type': 'application/json',
+              'X-Request-Id': requestId,
             },
             body: JSON.stringify({ email }),
           });
 
           if (!emailRes.ok) {
-            const errData = await emailRes.json().catch(() => ({}));
-            console.error('Email send failed:', errData);
+            const errData = await emailRes.json().catch(() => ({ code: 'UNKNOWN' }));
             trackEvent('newsletter_error');
             setStatus('error');
-            if (emailRes.status === 429) {
+            if (errData.code === 'RATE_LIMITED' || errData.code === 'DUPLICATE_SUBMISSION' || emailRes.status === 429) {
               setMessage(errData.error ?? 'Too many requests. Please wait a moment and try again.');
+            } else if (errData.code === 'EMAIL_REJECTED') {
+              setMessage("Your email address was rejected by the mail provider. Please check it and try again.");
             } else {
               setMessage("You're subscribed, but we couldn't send your coupon. Please contact us at info@makhana-express.com.");
             }
