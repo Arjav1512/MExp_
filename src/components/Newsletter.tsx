@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../lib/supabase';
 import { trackEvent } from '../lib/analytics';
+import { isValidEmail } from '../lib/emailValidation';
 import { fadeUp, staggerContainer, viewportOptions } from '../lib/motion';
 
 const RATE_LIMIT_MS = 60_000;
@@ -36,8 +37,7 @@ export function Newsletter() {
       return;
     }
 
-    const emailRegex = /^[a-zA-Z0-9]([a-zA-Z0-9._%+\-]*[a-zA-Z0-9])?@[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(email) || email.length > 320) {
+    if (!isValidEmail(email)) {
       setStatus('error');
       setMessage('Please enter a valid email address');
       return;
@@ -75,7 +75,11 @@ export function Newsletter() {
             console.error('Email send failed:', errData);
             trackEvent('newsletter_error');
             setStatus('error');
-            setMessage("You're subscribed, but we couldn't send your coupon. Please contact us at info@makhana-express.com.");
+            if (emailRes.status === 429) {
+              setMessage(errData.error ?? 'Too many requests. Please wait a moment and try again.');
+            } else {
+              setMessage("You're subscribed, but we couldn't send your coupon. Please contact us at info@makhana-express.com.");
+            }
             return;
           }
         } catch (emailErr) {

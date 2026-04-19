@@ -1,4 +1,5 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -6,14 +7,89 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
 };
 
+// ---------------------------------------------------------------------------
+// Shared validation — identical logic must be kept in sync with
+// src/lib/emailValidation.ts on the frontend.
+// Rules:
+//   - Local part: 1–64 chars, no leading/trailing/consecutive dots
+//   - Domain: valid labels separated by dots, no leading/trailing dots
+//   - TLD: at least 2 alpha chars
+//   - Full address: max 320 chars
+// ---------------------------------------------------------------------------
+const EMAIL_REGEX =
+  /^[a-zA-Z0-9]([a-zA-Z0-9._%+\-]*[a-zA-Z0-9])?@[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+
+function isValidEmail(email: string): { valid: boolean; reason?: string } {
+  if (typeof email !== "string") return { valid: false, reason: "not_string" };
+  if (email.length > 320) return { valid: false, reason: "too_long" };
+
+  const atIndex = email.indexOf("@");
+  if (atIndex < 1 || atIndex > 64) return { valid: false, reason: "local_part_invalid" };
+
+  const local = email.slice(0, atIndex);
+  if (/\.\./.test(local)) return { valid: false, reason: "consecutive_dots_local" };
+
+  const domain = email.slice(atIndex + 1);
+  if (/\.\./.test(domain)) return { valid: false, reason: "consecutive_dots_domain" };
+
+  if (!EMAIL_REGEX.test(email)) return { valid: false, reason: "regex_fail" };
+
+  return { valid: true };
+}
+
+// ---------------------------------------------------------------------------
+// Structured logger — emits JSON for easy integration with log aggregators
+// ---------------------------------------------------------------------------
+function log(
+  level: "info" | "warn" | "error",
+  message: string,
+  meta: Record<string, unknown> = {}
+) {
+  const entry = {
+    level,
+    message,
+    timestamp: new Date().toISOString(),
+    service: "send-welcome-email",
+    ...meta,
+  };
+  if (level === "error") {
+    console.error(JSON.stringify(entry));
+  } else if (level === "warn") {
+    console.warn(JSON.stringify(entry));
+  } else {
+    console.log(JSON.stringify(entry));
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Retry with exponential backoff — retries only on network errors or 5xx
+// ---------------------------------------------------------------------------
+interface ResendResponse {
+  id?: string;
+  statusCode?: number;
+  message?: string;
+  name?: string;
+}
+
+interface EmailResult {
+  ok: boolean;
+  id?: string;
+  statusCode: number;
+  body: ResendResponse;
+}
+
 async function sendEmail(
   apiKey: string,
   payload: { from: string; to: string[]; subject: string; html: string },
-  retries = 1
-): Promise<{ ok: boolean; text: string }> {
-  for (let attempt = 0; attempt <= retries; attempt++) {
+  maxRetries = 2
+): Promise<EmailResult> {
+  const delays = [500, 1000, 2000];
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    let res: Response;
+
     try {
-      const res = await fetch("https://api.resend.com/emails", {
+      res = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${apiKey}`,
@@ -21,24 +97,120 @@ async function sendEmail(
         },
         body: JSON.stringify(payload),
       });
-      const text = await res.text();
-      if (res.ok) return { ok: true, text };
-      if (attempt < retries) {
-        await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
-        continue;
-      }
-      return { ok: false, text };
-    } catch (err) {
-      if (attempt < retries) {
-        await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
-        continue;
-      }
-      throw err;
+    } catch (networkErr) {
+      const isLast = attempt === maxRetries;
+      log(isLast ? "error" : "warn", "Resend network error", {
+        attempt,
+        maxRetries,
+        error: String(networkErr),
+        to: payload.to,
+        retryable: !isLast,
+      });
+      if (isLast) throw networkErr;
+      await new Promise((r) => setTimeout(r, delays[attempt]));
+      continue;
     }
+
+    let body: ResendResponse = {};
+    try {
+      body = await res.json();
+    } catch {
+      body = {};
+    }
+
+    if (res.ok) {
+      if (!body.id) {
+        log("warn", "Resend returned 2xx but missing id field", { attempt, body, to: payload.to });
+      }
+      return { ok: true, id: body.id, statusCode: res.status, body };
+    }
+
+    const isRetryable = res.status >= 500 || res.status === 429;
+    const isLast = attempt === maxRetries;
+
+    log(isLast ? "error" : "warn", "Resend API error", {
+      attempt,
+      maxRetries,
+      statusCode: res.status,
+      body,
+      to: payload.to,
+      retryable: isRetryable && !isLast,
+    });
+
+    if (isRetryable && !isLast) {
+      await new Promise((r) => setTimeout(r, delays[attempt]));
+      continue;
+    }
+
+    return { ok: false, statusCode: res.status, body };
   }
-  return { ok: false, text: "Max retries exceeded" };
+
+  return { ok: false, statusCode: 0, body: { message: "Max retries exceeded" } };
 }
 
+// ---------------------------------------------------------------------------
+// IP-based rate limiting via Supabase (max 5 requests per IP per 60 seconds)
+// ---------------------------------------------------------------------------
+const RATE_LIMIT_WINDOW_SEC = 60;
+const RATE_LIMIT_MAX = 5;
+
+async function checkRateLimit(
+  supabaseAdmin: ReturnType<typeof createClient>,
+  ip: string
+): Promise<{ allowed: boolean; count: number }> {
+  const windowStart = new Date(Date.now() - RATE_LIMIT_WINDOW_SEC * 1000).toISOString();
+
+  const { count, error } = await supabaseAdmin
+    .from("rate_limit_log")
+    .select("id", { count: "exact", head: true })
+    .eq("ip", ip)
+    .eq("action", "newsletter_subscribe")
+    .gte("created_at", windowStart);
+
+  if (error) {
+    log("warn", "Rate limit check failed, allowing request", { ip, error: error.message });
+    return { allowed: true, count: 0 };
+  }
+
+  return { allowed: (count ?? 0) < RATE_LIMIT_MAX, count: count ?? 0 };
+}
+
+async function recordRateLimitAttempt(
+  supabaseAdmin: ReturnType<typeof createClient>,
+  ip: string
+): Promise<void> {
+  const { error } = await supabaseAdmin
+    .from("rate_limit_log")
+    .insert({ ip, action: "newsletter_subscribe" });
+
+  if (error) {
+    log("warn", "Failed to record rate limit attempt", { ip, error: error.message });
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Duplicate guard — rejects if same email submitted within 60s
+// ---------------------------------------------------------------------------
+async function isRecentDuplicate(
+  supabaseAdmin: ReturnType<typeof createClient>,
+  email: string
+): Promise<boolean> {
+  const windowStart = new Date(Date.now() - RATE_LIMIT_WINDOW_SEC * 1000).toISOString();
+
+  const { count, error } = await supabaseAdmin
+    .from("rate_limit_log")
+    .select("id", { count: "exact", head: true })
+    .eq("ip", `email:${email}`)
+    .eq("action", "newsletter_subscribe")
+    .gte("created_at", windowStart);
+
+  if (error) return false;
+  return (count ?? 0) > 0;
+}
+
+// ---------------------------------------------------------------------------
+// HTML helpers
+// ---------------------------------------------------------------------------
 function escapeHtml(str: string): string {
   return str
     .replace(/&/g, "&amp;")
@@ -48,41 +220,94 @@ function escapeHtml(str: string): string {
     .replace(/'/g, "&#x27;");
 }
 
+// ---------------------------------------------------------------------------
+// JSON response helper
+// ---------------------------------------------------------------------------
+function jsonResponse(body: unknown, status: number): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Main handler
+// ---------------------------------------------------------------------------
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { status: 200, headers: corsHeaders });
   }
 
   try {
-    const { email } = await req.json();
+    // --- Setup Supabase admin client (service role, bypasses RLS) ---
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+      { auth: { persistSession: false } }
+    );
+
+    // --- Parse body ---
+    let email: unknown;
+    try {
+      const body = await req.json();
+      email = body?.email;
+    } catch {
+      return jsonResponse({ error: "Invalid JSON body" }, 400);
+    }
 
     if (!email || typeof email !== "string") {
-      return new Response(JSON.stringify({ error: "Email is required" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return jsonResponse({ error: "Email is required" }, 400);
     }
 
-    const emailRegex = /^[a-zA-Z0-9]([a-zA-Z0-9._%+\-]*[a-zA-Z0-9])?@[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(email) || email.length > 320 || email.indexOf('@') > 64) {
-      return new Response(JSON.stringify({ error: "Invalid email address" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    // --- Backend email validation (source of truth) ---
+    const validation = isValidEmail(email);
+    if (!validation.valid) {
+      log("warn", "Email validation rejected", { email, reason: validation.reason });
+      return jsonResponse({ error: "Invalid email address" }, 400);
     }
 
-    const safeEmail = escapeHtml(email);
+    const normalizedEmail = email.trim().toLowerCase();
 
+    // --- IP extraction ---
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      req.headers.get("x-real-ip") ||
+      "unknown";
+
+    // --- IP-based rate limiting ---
+    const { allowed, count } = await checkRateLimit(supabaseAdmin, ip);
+    if (!allowed) {
+      log("warn", "Rate limit exceeded", { ip, count, email: normalizedEmail });
+      return jsonResponse(
+        { error: "Too many requests. Please try again later." },
+        429
+      );
+    }
+
+    // --- Duplicate submission guard (same email within 60s) ---
+    const isDuplicate = await isRecentDuplicate(supabaseAdmin, normalizedEmail);
+    if (isDuplicate) {
+      log("warn", "Duplicate submission blocked", { email: normalizedEmail });
+      return jsonResponse(
+        { error: "This email was recently submitted. Please wait before trying again." },
+        429
+      );
+    }
+
+    // --- Record this attempt (IP + email keyed) ---
+    await Promise.all([
+      recordRateLimitAttempt(supabaseAdmin, ip),
+      recordRateLimitAttempt(supabaseAdmin, `email:${normalizedEmail}`),
+    ]);
+
+    // --- Check API key ---
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-
     if (!RESEND_API_KEY) {
-      console.error("RESEND_API_KEY is not configured");
-      return new Response(JSON.stringify({ error: "Email service not configured" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      log("error", "RESEND_API_KEY not configured");
+      return jsonResponse({ error: "Email service not configured" }, 500);
     }
 
+    const safeEmail = escapeHtml(normalizedEmail);
     const ownerEmail = "info@makhana-express.com";
     const couponCode = "LAUNCH2026";
 
@@ -132,10 +357,13 @@ Deno.serve(async (req: Request) => {
 </body>
 </html>`;
 
+    log("info", "Sending welcome email", { email: normalizedEmail });
+
+    // --- Send both emails concurrently ---
     const [subscriberResult, ownerResult] = await Promise.allSettled([
       sendEmail(RESEND_API_KEY, {
         from: "Makhana Express <onboarding@resend.dev>",
-        to: [email],
+        to: [normalizedEmail],
         subject: "Your 20% off coupon is here — welcome to Makhana Express!",
         html: subscriberHtml,
       }),
@@ -147,38 +375,62 @@ Deno.serve(async (req: Request) => {
       }),
     ]);
 
-    if (subscriberResult.status === "rejected") {
-      console.error("Failed to send subscriber welcome email after retries:", subscriberResult.reason);
-      return new Response(JSON.stringify({ error: "Failed to send welcome email" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    if (!subscriberResult.value.ok) {
-      console.error("Resend API error (subscriber):", subscriberResult.value.text);
-      return new Response(JSON.stringify({ error: "Failed to send welcome email", details: subscriberResult.value.text }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
+    // --- Owner notification failure is non-blocking ---
     if (ownerResult.status === "rejected") {
-      console.error("Failed to send owner notification:", ownerResult.reason);
+      log("error", "Owner notification send failed", {
+        email: normalizedEmail,
+        error: String(ownerResult.reason),
+      });
     } else if (!ownerResult.value.ok) {
-      console.error("Resend API error (owner):", ownerResult.value.text);
+      log("error", "Owner notification rejected by Resend", {
+        email: normalizedEmail,
+        statusCode: ownerResult.value.statusCode,
+        body: ownerResult.value.body,
+      });
     }
 
-    const data = JSON.parse(subscriberResult.value.text);
-    return new Response(JSON.stringify({ success: true, id: data.id }), {
-      status: 200,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    // --- Subscriber email is required for success ---
+    if (subscriberResult.status === "rejected") {
+      log("error", "Subscriber welcome email threw after retries", {
+        email: normalizedEmail,
+        error: String(subscriberResult.reason),
+      });
+      return jsonResponse({ error: "Failed to send welcome email" }, 500);
+    }
+
+    const subResult = subscriberResult.value;
+
+    if (!subResult.ok) {
+      log("error", "Resend rejected subscriber email", {
+        email: normalizedEmail,
+        statusCode: subResult.statusCode,
+        body: subResult.body,
+      });
+
+      if (subResult.statusCode === 422 || subResult.statusCode === 400) {
+        return jsonResponse({ error: "Email address rejected by mail provider" }, 422);
+      }
+      if (subResult.statusCode === 429) {
+        return jsonResponse({ error: "Email service rate limit reached. Try again shortly." }, 429);
+      }
+      return jsonResponse({ error: "Failed to send welcome email" }, 500);
+    }
+
+    if (!subResult.id) {
+      log("warn", "Resend succeeded but returned no message id", {
+        email: normalizedEmail,
+        body: subResult.body,
+      });
+    }
+
+    log("info", "Welcome email sent successfully", {
+      email: normalizedEmail,
+      messageId: subResult.id,
     });
+
+    return jsonResponse({ success: true, id: subResult.id }, 200);
   } catch (err) {
-    console.error("Unexpected error:", err);
-    return new Response(JSON.stringify({ error: "Unexpected error" }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    log("error", "Unexpected handler error", { error: String(err) });
+    return jsonResponse({ error: "Unexpected error" }, 500);
   }
 });
