@@ -72,13 +72,13 @@ export function OurMission({ navigate, onShopCTA }: OurMissionProps) {
               <Sprout className="w-3.5 h-3.5" />
               Our Mission
             </motion.span>
-            <motion.h1
+            <motion.h2
               style={{ fontSize: 'clamp(2.5rem, 5.5vw, 4rem)', letterSpacing: '-0.03em', lineHeight: '0.95' }}
               className="font-headline font-black text-primary"
               variants={fadeUp}
             >
               Snack Better.<br />Choose Better.
-            </motion.h1>
+            </motion.h2>
             <div className="divider" />
             <motion.p
               className="text-base md:text-lg text-on-surface-variant leading-relaxed max-w-lg"

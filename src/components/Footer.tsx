@@ -1,4 +1,4 @@
-import { Instagram, Mail } from 'lucide-react';
+import { Instagram, Mail, Facebook, Youtube } from 'lucide-react';
 import type { Page } from '../lib/router';
 
 interface FooterProps {
@@ -33,6 +33,24 @@ export function Footer({ navigate }: FooterProps) {
                 aria-label="Instagram"
               >
                 <Instagram className="w-4 h-4" />
+              </a>
+              <a
+                className="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-on-primary transition-all duration-200"
+                href="https://www.facebook.com/makhanaexpress"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+              >
+                <Facebook className="w-4 h-4" />
+              </a>
+              <a
+                className="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-on-primary transition-all duration-200"
+                href="https://www.youtube.com/@makhanaexpress"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube"
+              >
+                <Youtube className="w-4 h-4" />
               </a>
               <a
                 className="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-on-primary transition-all duration-200"
