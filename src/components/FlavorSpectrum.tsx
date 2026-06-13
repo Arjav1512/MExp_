@@ -92,7 +92,7 @@ export function FlavorSpectrum({ onShopCTA }: FlavorSpectrumProps) {
             </motion.h3>
 
             <motion.p
-              className="text-white/65 max-w-md text-base leading-relaxed mb-10"
+              className="text-white/80 max-w-md text-base leading-relaxed mb-10"
               variants={fadeUp}
             >
               New flavours are being perfected in our kitchen — bold, clean, and made without compromise. Be the first to know when they drop.

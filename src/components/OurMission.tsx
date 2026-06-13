@@ -142,7 +142,7 @@ export function OurMission({ navigate, onShopCTA }: OurMissionProps) {
           >
             The best snack is one you can trust — what's in it, and where it comes from.
           </h2>
-          <p className="text-on-primary/65 text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
+          <p className="text-on-primary/80 text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
             We're bringing Bihar's ancient superfood to modern kitchens, while preserving the traditions and communities behind it.
           </p>
         </div>

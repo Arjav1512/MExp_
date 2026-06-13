@@ -77,7 +77,7 @@ export function ConversionCloser({ onShopCTA }: ConversionCloserProps) {
             <ShoppingBag className="w-5 h-5" />
             Order Your Pack
           </motion.button>
-          <p className="text-[11px] text-on-surface-variant/60 font-medium">
+          <p className="text-[11px] text-on-surface-variant font-medium">
             Fresh batches made weekly · Sealed at source · 100% natural
           </p>
         </motion.div>

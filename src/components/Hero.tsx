@@ -164,14 +164,14 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
                   Coming Soon
                 </span>
                 <h3 className="font-headline font-black text-[22px] text-white leading-tight">Peri Peri</h3>
-                <p className="text-white/65 text-sm mt-1.5 font-medium">Lightly spiced, fiery finish.</p>
+                <p className="text-white/80 text-sm mt-1.5 font-medium">Lightly spiced, fiery finish.</p>
                 <div className="flex items-center gap-1.5 mt-1">
                   <span className="w-0.5 h-0.5 rounded-full bg-white/30 inline-block" />
-                  <p className="text-white/35 text-[11px]">Airy</p>
-                  <span className="w-0.5 h-0.5 rounded-full bg-white/30 inline-block" />
-                  <p className="text-white/35 text-[11px]">Crunchy</p>
-                  <span className="w-0.5 h-0.5 rounded-full bg-white/30 inline-block" />
-                  <p className="text-white/35 text-[11px]">Addictive</p>
+                  <p className="text-white/70 text-[11px]">Airy</p>
+                  <span className="w-0.5 h-0.5 rounded-full bg-white/50 inline-block" />
+                  <p className="text-white/70 text-[11px]">Crunchy</p>
+                  <span className="w-0.5 h-0.5 rounded-full bg-white/50 inline-block" />
+                  <p className="text-white/70 text-[11px]">Addictive</p>
                 </div>
                 <button
                   onClick={(e) => { e.stopPropagation(); onShopCTA(); }}
@@ -208,14 +208,14 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
                   Coming Soon
                 </span>
                 <h3 className="font-headline font-black text-[22px] text-white leading-tight">Black Pepper</h3>
-                <p className="text-white/65 text-sm mt-1.5 font-medium">Warm, earthy, satisfying crunch.</p>
+                <p className="text-white/80 text-sm mt-1.5 font-medium">Warm, earthy, satisfying crunch.</p>
                 <div className="flex items-center gap-1.5 mt-1">
                   <span className="w-0.5 h-0.5 rounded-full bg-white/30 inline-block" />
-                  <p className="text-white/35 text-[11px]">Peppery</p>
-                  <span className="w-0.5 h-0.5 rounded-full bg-white/30 inline-block" />
-                  <p className="text-white/35 text-[11px]">Bold</p>
-                  <span className="w-0.5 h-0.5 rounded-full bg-white/30 inline-block" />
-                  <p className="text-white/35 text-[11px]">Clean</p>
+                  <p className="text-white/70 text-[11px]">Peppery</p>
+                  <span className="w-0.5 h-0.5 rounded-full bg-white/50 inline-block" />
+                  <p className="text-white/70 text-[11px]">Bold</p>
+                  <span className="w-0.5 h-0.5 rounded-full bg-white/50 inline-block" />
+                  <p className="text-white/70 text-[11px]">Clean</p>
                 </div>
                 <button
                   onClick={(e) => { e.stopPropagation(); onShopCTA(); }}
@@ -247,6 +247,8 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
                 alt="White roasted foxnuts in bowl"
                 width={280}
                 height={360}
+                fetchPriority="high"
+                decoding="async"
                 onLoad={() => setImageLoaded(true)}
                 onError={() => setImageLoaded(true)}
               />
@@ -259,11 +261,11 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
               <p className="text-xs text-on-surface-variant font-medium">Lightly roasted, earthy crunch.</p>
               <div className="flex items-center gap-1.5">
                 <span className="w-0.5 h-0.5 rounded-full bg-on-surface-variant/30 inline-block" />
-                <p className="text-[10px] text-on-surface-variant/50">Clean</p>
-                <span className="w-0.5 h-0.5 rounded-full bg-on-surface-variant/30 inline-block" />
-                <p className="text-[10px] text-on-surface-variant/50">Natural</p>
-                <span className="w-0.5 h-0.5 rounded-full bg-on-surface-variant/30 inline-block" />
-                <p className="text-[10px] text-on-surface-variant/50">0 Additives</p>
+                <p className="text-[10px] text-on-surface-variant">Clean</p>
+                <span className="w-0.5 h-0.5 rounded-full bg-on-surface-variant/50 inline-block" />
+                <p className="text-[10px] text-on-surface-variant">Natural</p>
+                <span className="w-0.5 h-0.5 rounded-full bg-on-surface-variant/50 inline-block" />
+                <p className="text-[10px] text-on-surface-variant">0 Additives</p>
               </div>
             </div>
           </div>

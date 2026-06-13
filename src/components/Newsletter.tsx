@@ -180,7 +180,7 @@ export function Newsletter() {
                   <label htmlFor="newsletter-email" className="sr-only">Email address</label>
                   <input
                     id="newsletter-email"
-                    className="flex-grow bg-white/[0.08] border border-white/20 text-white placeholder:text-white/40 px-5 py-3 rounded-xl focus:ring-2 focus:ring-primary-fixed focus:border-transparent focus:outline-none text-[15px] transition-all"
+                    className="flex-grow bg-white/[0.08] border border-white/20 text-white placeholder:text-white/60 px-5 py-3 rounded-xl focus:ring-2 focus:ring-primary-fixed focus:border-transparent focus:outline-none text-[15px] transition-all"
                     placeholder="Enter your email"
                     type="email"
                     value={email}
@@ -235,10 +235,10 @@ export function Newsletter() {
               )}
             </AnimatePresence>
 
-            <p className="mt-4 text-xs text-on-primary/45 font-medium">
+            <p className="mt-4 text-xs text-on-primary/75 font-medium">
               We respect your privacy. No spam. Unsubscribe anytime.
             </p>
-            <p className="mt-1.5 text-xs text-on-primary/35 font-medium">
+            <p className="mt-1.5 text-xs text-on-primary/70 font-medium">
               *Offer valid for first-time customers only.
             </p>
           </motion.div>

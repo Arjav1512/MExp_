@@ -110,7 +110,7 @@ export function ProductShowcase({ onShopCTA }: ProductShowcaseProps) {
               </div>
               <div className="absolute bottom-4 left-4 right-4">
                 <p className="text-white font-black text-[15px] leading-tight">{label}</p>
-                <p className="text-white/60 text-[11px] font-medium mt-0.5">{sublabel}</p>
+                <p className="text-white/80 text-[11px] font-medium mt-0.5">{sublabel}</p>
               </div>
             </motion.div>
           ))}

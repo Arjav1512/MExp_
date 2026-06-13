@@ -110,7 +110,7 @@ export function Craftsmanship() {
                     <Icon className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-[15px] text-on-surface mb-0.5">{title}</h4>
+                    <h3 className="font-bold text-[15px] text-on-surface mb-0.5">{title}</h3>
                     <p className="text-on-surface-variant text-sm leading-relaxed">{desc}</p>
                     <p className="text-primary text-xs font-bold mt-1">{benefit}</p>
                   </div>

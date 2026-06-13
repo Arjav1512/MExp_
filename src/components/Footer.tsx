@@ -21,7 +21,7 @@ export function Footer({ navigate }: FooterProps) {
             >
               Makhana Express
             </button>
-            <p className="text-stone-500 text-sm leading-relaxed max-w-xs">
+            <p className="text-on-surface-variant text-sm leading-relaxed max-w-xs">
               Sourced directly from the traditional water bodies of Bihar, our makhana is carefully harvested and packed fresh to retain its natural quality and nutritional value.
             </p>
             <div className="flex gap-2.5 pt-1">
@@ -45,7 +45,7 @@ export function Footer({ navigate }: FooterProps) {
           </div>
 
           <div className="space-y-4">
-            <h4 className="font-bold text-[13px] text-on-surface uppercase tracking-wider">Explore</h4>
+            <h3 className="font-bold text-[13px] text-on-surface uppercase tracking-wider">Explore</h3>
             <ul className="space-y-2.5">
               {[
                 { label: 'Our Story', action: () => { navigate('mission'); window.scrollTo({ top: 0 }); } },
@@ -53,7 +53,7 @@ export function Footer({ navigate }: FooterProps) {
               ].map((item) => (
                 <li key={item.label}>
                   <button
-                    className="text-stone-500 hover:text-primary transition-colors text-sm"
+                    className="text-on-surface-variant hover:text-primary transition-colors text-sm"
                     onClick={item.action}
                   >
                     {item.label}
@@ -64,11 +64,11 @@ export function Footer({ navigate }: FooterProps) {
           </div>
 
           <div className="space-y-4">
-            <h4 className="font-bold text-[13px] text-on-surface uppercase tracking-wider">Community</h4>
+            <h3 className="font-bold text-[13px] text-on-surface uppercase tracking-wider">Community</h3>
             <ul className="space-y-2.5">
               <li>
                 <button
-                  className="text-stone-500 hover:text-primary transition-colors text-sm"
+                  className="text-on-surface-variant hover:text-primary transition-colors text-sm"
                   onClick={() => handleScroll('community')}
                 >
                   Join the Community
@@ -76,7 +76,7 @@ export function Footer({ navigate }: FooterProps) {
               </li>
               <li>
                 <button
-                  className="text-stone-500 hover:text-primary transition-colors text-sm"
+                  className="text-on-surface-variant hover:text-primary transition-colors text-sm"
                   onClick={() => handleScroll('newsletter')}
                 >
                   Subscribe for 20% Off
@@ -87,10 +87,10 @@ export function Footer({ navigate }: FooterProps) {
         </div>
 
         <div className="mt-12 pt-6 border-t border-surface-container-high flex flex-col sm:flex-row justify-between items-center gap-3">
-          <p className="text-stone-400 text-[13px]">
+          <p className="text-on-surface-variant text-[13px]">
             © 2026 Makhana Express. From the ❤️ of Bihar.
           </p>
-          <p className="text-stone-400 text-[13px]">
+          <p className="text-on-surface-variant text-[13px]">
             <a href="mailto:info@makhana-express.com" className="hover:text-primary transition-colors">
               info@makhana-express.com
             </a>
