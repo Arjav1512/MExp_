@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.upsert_rate_limit_counter(text, timestamptz, integer) FROM anon, authenticated, public;
