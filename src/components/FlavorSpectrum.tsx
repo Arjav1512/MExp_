@@ -54,10 +54,10 @@ export function FlavorSpectrum({ onShopCTA }: FlavorSpectrumProps) {
             style={{ filter: 'blur(12px)', transform: 'scale(1.08)' }}
           >
             {[
-              '/1st.png',
-              '/2nd.jpeg',
-              '/3rd.png',
-              '/1st.png',
+              '/1st.webp',
+              '/2nd.webp',
+              '/3rd.webp',
+              '/1st.webp',
             ].map((src, i) => (
               <div
                 key={i}

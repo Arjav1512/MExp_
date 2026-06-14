@@ -45,11 +45,12 @@ export function Craftsmanship() {
             <div className="relative z-10 rounded-2xl overflow-hidden aspect-video w-full shadow-2xl">
               <img
                 className="w-full h-full object-cover object-center"
-                src="/Harvesting_makhana_in_a_lotus_pond.png"
+                src="/harvesting-makhana.webp"
                 alt="Fresh makhana sourced from lotus ponds, cleaned and prepared for consumption"
                 loading="lazy"
-                width={800}
-                height={450}
+                decoding="async"
+                width={1200}
+                height={800}
               />
               <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-primary/20" />
               <div className="absolute bottom-0 left-0 right-0 px-5 py-4 bg-gradient-to-t from-black/60 to-transparent">

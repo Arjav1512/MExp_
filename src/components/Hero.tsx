@@ -163,7 +163,7 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
                 <span className="inline-block bg-primary-fixed text-on-primary-fixed text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
                   Coming Soon
                 </span>
-                <h3 className="font-headline font-black text-[22px] text-white leading-tight">Peri Peri</h3>
+                <p className="font-headline font-black text-[22px] text-white leading-tight">Peri Peri</p>
                 <p className="text-white/80 text-sm mt-1.5 font-medium">Lightly spiced, fiery finish.</p>
                 <div className="flex items-center gap-1.5 mt-1">
                   <span className="w-0.5 h-0.5 rounded-full bg-white/30 inline-block" />
@@ -207,7 +207,7 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
                 <span className="inline-block bg-[#ffb27a] text-[#301400] text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
                   Coming Soon
                 </span>
-                <h3 className="font-headline font-black text-[22px] text-white leading-tight">Black Pepper</h3>
+                <p className="font-headline font-black text-[22px] text-white leading-tight">Black Pepper</p>
                 <p className="text-white/80 text-sm mt-1.5 font-medium">Warm, earthy, satisfying crunch.</p>
                 <div className="flex items-center gap-1.5 mt-1">
                   <span className="w-0.5 h-0.5 rounded-full bg-white/30 inline-block" />
@@ -255,7 +255,7 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
             </div>
             <div className="px-1 space-y-1.5">
               <div className="flex items-center justify-between">
-                <h3 className="font-headline font-black text-primary text-[15px] leading-none">The Classic</h3>
+                <p className="font-headline font-black text-primary text-[15px] leading-none">The Classic</p>
                 <span className="text-[10px] bg-primary-fixed text-on-primary-fixed font-bold px-2 py-0.5 rounded-full">Airy</span>
               </div>
               <p className="text-xs text-on-surface-variant font-medium">Lightly roasted, earthy crunch.</p>

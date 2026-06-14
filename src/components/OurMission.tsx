@@ -110,8 +110,9 @@ export function OurMission({ navigate, onShopCTA }: OurMissionProps) {
                 alt="Farmer harvesting makhana in a Bihar lotus pond"
                 className="w-full h-full object-cover"
                 loading="lazy"
-                width={448}
-                height={448}
+                decoding="async"
+                width={832}
+                height={1248}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-primary/10 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-6">
@@ -242,8 +243,9 @@ export function OurMission({ navigate, onShopCTA }: OurMissionProps) {
                   alt="Bihar makhana farming community members at work"
                   className="absolute inset-0 w-full h-full object-cover"
                   loading="lazy"
-                  width={600}
-                  height={400}
+                  decoding="async"
+                  width={832}
+                  height={1248}
                 />
                 <div className="absolute inset-0 bg-primary/25" />
               </div>

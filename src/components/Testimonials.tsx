@@ -9,19 +9,19 @@ const testimonials = [
     name: 'Arjav J.',
     role: 'CTO',
     text: "Needed something I could snack on during long work hours. Light and doesn't slow me down.",
-    image: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=400',
+    image: '/testimonial-1.webp',
   },
   {
     name: 'Seema A.',
     role: 'Mother',
     text: "It's rare to find a snack that's both tasty and something I trust.",
-    image: 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=400',
+    image: '/testimonial-2.webp',
   },
   {
     name: 'Rohit P.',
     role: 'Fitness Enthusiast',
     text: 'Finally a snack that fits my routine — light, clean and actually satisfying. No Guilt.',
-    image: 'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=400',
+    image: '/testimonial-3.webp',
   },
 ];
 
@@ -61,6 +61,10 @@ function TestimonialCard({ testimonial, featured, index }: { testimonial: typeof
             style={{ opacity: imgLoaded ? 1 : 0, position: imgLoaded ? 'static' : 'absolute', inset: 0 }}
             src={testimonial.image}
             alt={`Photo of ${testimonial.name}`}
+            width={44}
+            height={44}
+            loading="lazy"
+            decoding="async"
             onLoad={() => setImgLoaded(true)}
             onError={() => setImgLoaded(true)}
           />
