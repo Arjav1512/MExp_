@@ -22,18 +22,20 @@ function report(error: Error | string, source: string) {
   console.error('[Monitoring]', entry);
 
   if (!import.meta.env.DEV) {
-    supabase
-      .from('error_logs')
-      .insert([{
-        message: entry.message,
-        stack: entry.stack ?? null,
-        source: entry.source,
-        url: entry.url,
-        user_agent: entry.userAgent,
-      }])
-      .then(({ error: dbError }) => {
-        if (dbError) console.error('[Monitoring] log failed:', dbError.message);
-      });
+    Promise.resolve(
+      supabase
+        .from('error_logs')
+        .insert([{
+          message: entry.message,
+          stack: entry.stack ?? null,
+          source: entry.source,
+          url: entry.url,
+          user_agent: entry.userAgent,
+        }])
+        .then(({ error: dbError }) => {
+          if (dbError) console.error('[Monitoring] log failed:', dbError.message);
+        })
+    ).catch(() => {});
   }
 }
 

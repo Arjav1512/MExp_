@@ -25,9 +25,13 @@ export function useRouter(): [Page, (page: Page) => void] {
   }, []);
 
   const navigate = (target: Page) => {
-    window.location.hash = target === 'home' ? '' : target;
+    const newHash = target === 'home' ? '' : target;
+    if (window.location.hash.replace('#', '') === newHash) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    window.location.hash = newHash;
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    setPageState(target);
   };
 
   return [page, navigate];

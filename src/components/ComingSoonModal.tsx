@@ -8,13 +8,29 @@ interface ComingSoonModalProps {
 }
 
 export function ComingSoonModal({ onClose, onSubscribe }: ComingSoonModalProps) {
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const ctaButtonRef = useRef<HTMLButtonElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    closeButtonRef.current?.focus();
+    ctaButtonRef.current?.focus();
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') { onClose(); return; }
+      if (e.key === 'Tab' && modalRef.current) {
+        const focusable = modalRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
@@ -39,6 +55,7 @@ export function ComingSoonModal({ onClose, onSubscribe }: ComingSoonModalProps) 
       />
 
       <motion.div
+        ref={modalRef}
         className="relative bg-background rounded-2xl shadow-2xl w-full max-w-sm p-8 text-center border border-surface-container-high"
         initial={{ opacity: 0, scale: 0.88, y: 24 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -46,7 +63,6 @@ export function ComingSoonModal({ onClose, onSubscribe }: ComingSoonModalProps) 
         transition={{ type: 'spring', stiffness: 340, damping: 28 }}
       >
         <button
-          ref={closeButtonRef}
           onClick={onClose}
           className="absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
           aria-label="Close"
@@ -82,6 +98,7 @@ export function ComingSoonModal({ onClose, onSubscribe }: ComingSoonModalProps) 
         </motion.p>
 
         <motion.button
+          ref={ctaButtonRef}
           onClick={() => { onClose(); onSubscribe(); }}
           className="btn-primary w-full py-3.5 text-[15px] justify-center"
           initial={{ opacity: 0, y: 8 }}

@@ -69,8 +69,8 @@ async function verifySignature(
 ): Promise<boolean> {
   const secret = Deno.env.get("RESEND_WEBHOOK_SECRET");
   if (!secret) {
-    log("warn", "WEBHOOK_NO_SECRET", "RESEND_WEBHOOK_SECRET not set — skipping signature check");
-    return true;
+    log("error", "WEBHOOK_NO_SECRET", "RESEND_WEBHOOK_SECRET not configured — rejecting request");
+    return false;
   }
 
   const svixId        = req.headers.get("svix-id") ?? "";
@@ -138,11 +138,6 @@ async function verifySignature(
 // =============================================================================
 // EVENTS THAT INDICATE A HARD FAILURE — subscriber should be deactivated
 // =============================================================================
-const DEACTIVATE_EVENTS = new Set([
-  "email.bounced",
-  "email.complained",
-]);
-
 // Bounce types that are permanent (as opposed to transient soft bounces)
 const HARD_BOUNCE_TYPES = new Set([
   "hard",
@@ -231,9 +226,28 @@ Deno.serve(async (req: Request) => {
     { auth: { persistSession: false } },
   );
 
+  // ── Deduplicate: skip if this exact event was already processed ─────────
+  const dedupMessageId = messageId || requestId;
+  const { data: existing } = await db
+    .from("email_delivery_log")
+    .select("id")
+    .eq("message_id", dedupMessageId)
+    .eq("event", eventType)
+    .maybeSingle();
+
+  if (existing) {
+    log("info", "WEBHOOK_DUPLICATE", "Duplicate webhook event — already processed", {
+      requestId, eventType, messageId: dedupMessageId,
+    });
+    return new Response(JSON.stringify({ received: true, duplicate: true, eventType }), {
+      status: 200,
+      headers: { ...CORS, "Content-Type": "application/json" },
+    });
+  }
+
   // ── Log event to email_delivery_log ──────────────────────────────────────
   const { error: insertError } = await db.from("email_delivery_log").insert({
-    message_id: messageId || requestId,
+    message_id: dedupMessageId,
     email:      typeof email === "string" ? email.trim().toLowerCase() : "",
     event:      eventType,
     event_data: payload,

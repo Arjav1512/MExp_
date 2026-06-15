@@ -23,8 +23,10 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 // =============================================================================
 // CORS
 // =============================================================================
+const ALLOWED_ORIGIN = Deno.env.get("ALLOWED_ORIGIN") || "https://makhana-express.com";
+
 const CORS = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Access-Control-Allow-Headers":
     "Content-Type, Authorization, X-Client-Info, Apikey, X-Request-Id, Idempotency-Key",
@@ -38,7 +40,7 @@ const CORS = {
 // frontend check was bypassed. Any change here MUST be mirrored in the frontend.
 // =============================================================================
 const EMAIL_REGEX =
-  /^[a-zA-Z0-9]([a-zA-Z0-9._%+\-]*[a-zA-Z0-9])?@[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+  /^[a-zA-Z0-9]([a-zA-Z0-9._%+-]*[a-zA-Z0-9])?@[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
 
 function validateEmail(email: string): { valid: true } | { valid: false; reason: string } {
   if (typeof email !== "string" || !email) return { valid: false, reason: "MISSING" };
@@ -441,8 +443,9 @@ Deno.serve(async (req: Request) => {
     }
 
     const safeEmail   = escapeHtml(email);
-    const ownerEmail  = "info@makhana-express.com";
-    const couponCode  = "LAUNCH2026";
+    const ownerEmail  = Deno.env.get("OWNER_EMAIL") || "info@makhana-express.com";
+    const couponCode  = Deno.env.get("COUPON_CODE") || "LAUNCH2026";
+    const fromEmail   = Deno.env.get("RESEND_FROM_EMAIL") || "noreply@makhana-express.com";
 
     const subscriberHtml = `<!DOCTYPE html>
 <html lang="en">
@@ -494,13 +497,13 @@ Deno.serve(async (req: Request) => {
 
     const [subscriberResult, ownerResult] = await Promise.allSettled([
       sendEmail(RESEND_API_KEY, {
-        from: "Makhana Express <onboarding@resend.dev>",
+        from: `Makhana Express <${fromEmail}>`,
         to: [email],
         subject: "Your 20% off coupon is here — welcome to Makhana Express!",
         html: subscriberHtml,
       }, requestId),
       sendEmail(RESEND_API_KEY, {
-        from: "Makhana Express <onboarding@resend.dev>",
+        from: `Makhana Express <${fromEmail}>`,
         to: [ownerEmail],
         subject: `New subscriber: ${safeEmail}`,
         html: ownerHtml,

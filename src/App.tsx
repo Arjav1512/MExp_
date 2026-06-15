@@ -32,18 +32,20 @@ function App() {
     <div className="min-h-screen bg-background text-on-background font-body">
       <Header page={page} navigate={navigate} onShopCTA={handleShopCTA} />
       <main>
-        <Suspense fallback={null}>
+        <Suspense fallback={<div className="min-h-screen" />}>
           {page === 'mission' ? (
             <OurMission navigate={navigate} onShopCTA={handleShopCTA} />
           ) : (
             <>
               <Hero navigate={navigate} onShopCTA={handleShopCTA} />
-              <ProductShowcase onShopCTA={handleShopCTA} />
-              <FlavorSpectrum onShopCTA={handleShopCTA} />
-              <Craftsmanship />
-              <Testimonials />
-              <ConversionCloser onShopCTA={handleShopCTA} />
-              <Newsletter />
+              <Suspense fallback={<div style={{ minHeight: '2400px' }} />}>
+                <ProductShowcase onShopCTA={handleShopCTA} />
+                <FlavorSpectrum onShopCTA={handleShopCTA} />
+                <Craftsmanship />
+                <Testimonials />
+                <ConversionCloser onShopCTA={handleShopCTA} />
+                <Newsletter />
+              </Suspense>
             </>
           )}
         </Suspense>

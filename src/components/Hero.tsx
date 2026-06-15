@@ -132,10 +132,15 @@ export function Hero({ navigate, onShopCTA }: HeroProps) {
         <motion.div
           ref={stackRef}
           className="relative h-[480px] md:h-[560px] flex justify-center items-center cursor-pointer"
+          tabIndex={0}
+          role="group"
+          aria-label="Interactive product card stack — hover or press Enter to explore flavors"
           onMouseEnter={() => !isMobile && setCardActive(true)}
           onMouseLeave={() => !isMobile && setCardActive(false)}
           onClick={() => isMobile && setCardActive(prev => !prev)}
-          aria-label="Interactive product card stack — hover to explore flavors"
+          onFocus={() => setCardActive(true)}
+          onBlur={(e) => { if (!stackRef.current?.contains(e.relatedTarget as Node)) setCardActive(false); }}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setCardActive(prev => !prev); } }}
           variants={fadeIn}
           initial="hidden"
           animate="visible"

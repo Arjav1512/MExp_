@@ -8,14 +8,13 @@ interface Props {
 
 interface State {
   hasError: boolean;
-  eventId: string | null;
 }
 
 export class ErrorBoundary extends Component<Props, State> {
-  state: State = { hasError: false, eventId: null };
+  state: State = { hasError: false };
 
   static getDerivedStateFromError(): State {
-    return { hasError: true, eventId: null };
+    return { hasError: true };
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
@@ -23,7 +22,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   handleReset = () => {
-    this.setState({ hasError: false, eventId: null });
+    this.setState({ hasError: false });
     window.location.hash = '';
     window.location.reload();
   };
