@@ -1,33 +1,20 @@
 export type PaymentMethod = 'card' | 'upi' | 'cod';
 
-export interface PaymentRequest {
-  amountCents: number;
-  currency: string;
-  method: PaymentMethod;
-}
-
-export interface PaymentResult {
-  success: boolean;
-  provider: string;
-  reference: string | null;
-  error?: string;
+export interface PaymentOption {
+  id: PaymentMethod;
+  label: string;
+  desc: string;
+  available: boolean;
 }
 
 /**
- * Payment abstraction. The real provider (Razorpay / Stripe / etc.) will be
- * wired in behind this single function, so the checkout UI never changes.
- * For now it simulates an authorization so the full flow is exercisable.
+ * Only Cash on Delivery is genuinely wired up: no card/UPI gateway is
+ * configured for this project, so those methods are shown as coming soon and
+ * cannot be selected. The server independently rejects any non-COD method, so
+ * the UI can never place an order it can't actually fulfil.
  */
-export async function processPayment(req: PaymentRequest): Promise<PaymentResult> {
-  await new Promise((r) => setTimeout(r, 1400));
-
-  if (req.method === 'cod') {
-    return { success: true, provider: 'cash-on-delivery', reference: null };
-  }
-
-  return {
-    success: true,
-    provider: 'placeholder',
-    reference: 'SIM-' + Math.random().toString(36).slice(2, 10).toUpperCase(),
-  };
-}
+export const PAYMENT_OPTIONS: PaymentOption[] = [
+  { id: 'cod', label: 'Cash on Delivery', desc: 'Pay in cash when your order arrives', available: true },
+  { id: 'upi', label: 'UPI', desc: 'Coming soon', available: false },
+  { id: 'card', label: 'Card', desc: 'Coming soon', available: false },
+];

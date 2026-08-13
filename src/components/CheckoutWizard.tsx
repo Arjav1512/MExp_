@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ArrowRight, Check, User, MapPin, ClipboardList, CreditCard, Loader2, Lock, ShoppingBag, AlertCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, User, MapPin, ClipboardList, CreditCard, Loader2, Lock, ShoppingBag, AlertCircle, Truck } from 'lucide-react';
 import type { Page } from '../lib/router';
 import { useCart } from '../lib/cart';
 import { formatINR } from '../lib/format';
 import { shippingFor, placeOrder, type PlacedOrder, type OrderCustomer, type OrderAddress } from '../lib/commerce';
-import { processPayment, type PaymentMethod } from '../lib/payment';
+import { PAYMENT_OPTIONS, type PaymentMethod } from '../lib/payment';
 import { isValidEmail } from '../lib/emailValidation';
 import { OrderConfirmation } from './OrderConfirmation';
 import { trackCTAClick } from '../lib/analytics';
@@ -34,11 +34,12 @@ export function CheckoutWizard({ navigate }: CheckoutWizardProps) {
   const [step, setStep] = useState(1);
   const [customer, setCustomer] = useState<OrderCustomer>({ name: '', email: '', phone: '' });
   const [address, setAddress] = useState<OrderAddress>({ addressLine: '', street: '', city: '', state: '', pincode: '' });
-  const [method, setMethod] = useState<PaymentMethod>('card');
+  const [method, setMethod] = useState<PaymentMethod>('cod');
   const [errors, setErrors] = useState<Errors>({});
   const [processing, setProcessing] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [placed, setPlaced] = useState<PlacedOrder | null>(null);
+  const idempotencyKeyRef = useRef<string>(crypto.randomUUID());
 
   const shipping = shippingFor(subtotalCents);
   const total = subtotalCents + shipping;
@@ -102,17 +103,15 @@ export function CheckoutWizard({ navigate }: CheckoutWizardProps) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handlePayAndPlace = async () => {
+  const handlePlaceOrder = async () => {
+    if (processing) return;
     setProcessing(true);
     setSubmitError('');
-    trackCTAClick('Pay Now', 'checkout');
+    trackCTAClick('Place Order', 'checkout');
     try {
-      const payment = await processPayment({ amountCents: total, currency: 'INR', method });
-      if (!payment.success) {
-        setSubmitError('Payment could not be completed. Please try again.');
-        return;
-      }
       const order = await placeOrder({
+        idempotency_key: idempotencyKeyRef.current,
+        payment_method: method,
         customer,
         address,
         items: items.map((i) => ({ product_id: i.product_id, quantity: i.quantity })),
@@ -224,31 +223,35 @@ export function CheckoutWizard({ navigate }: CheckoutWizardProps) {
                 {step === 4 && (
                   <StepCard title="Payment" subtitle="Choose how you'd like to pay.">
                     <div className="space-y-3">
-                      {([
-                        { id: 'card', label: 'Card', desc: 'Credit or debit card' },
-                        { id: 'upi', label: 'UPI', desc: 'Pay with any UPI app' },
-                        { id: 'cod', label: 'Cash on Delivery', desc: 'Pay when it arrives' },
-                      ] as const).map((opt) => (
-                        <button
-                          key={opt.id}
-                          onClick={() => setMethod(opt.id)}
-                          className={`w-full flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all ${
-                            method === opt.id ? 'border-primary bg-primary/[0.04]' : 'border-outline/25 hover:border-outline/50'
-                          }`}
-                        >
-                          <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${method === opt.id ? 'border-primary' : 'border-outline/40'}`}>
-                            {method === opt.id && <span className="w-2.5 h-2.5 rounded-full bg-primary" />}
-                          </span>
-                          <span className="flex-1">
-                            <span className="block font-bold text-on-surface text-sm">{opt.label}</span>
-                            <span className="block text-xs text-on-surface-variant">{opt.desc}</span>
-                          </span>
-                        </button>
-                      ))}
+                      {PAYMENT_OPTIONS.map((opt) => {
+                        const selected = method === opt.id;
+                        return (
+                          <button
+                            key={opt.id}
+                            disabled={!opt.available}
+                            onClick={() => opt.available && setMethod(opt.id)}
+                            className={`w-full flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all ${
+                              !opt.available ? 'border-outline/15 opacity-55 cursor-not-allowed'
+                              : selected ? 'border-primary bg-primary/[0.04]' : 'border-outline/25 hover:border-outline/50'
+                            }`}
+                          >
+                            <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${selected && opt.available ? 'border-primary' : 'border-outline/40'}`}>
+                              {selected && opt.available && <span className="w-2.5 h-2.5 rounded-full bg-primary" />}
+                            </span>
+                            <span className="flex-1">
+                              <span className="flex items-center gap-2 font-bold text-on-surface text-sm">
+                                {opt.label}
+                                {!opt.available && <span className="text-[10px] font-bold uppercase tracking-wide text-on-surface-variant bg-surface-container-high rounded-full px-2 py-0.5">Soon</span>}
+                              </span>
+                              <span className="block text-xs text-on-surface-variant">{opt.desc}</span>
+                            </span>
+                          </button>
+                        );
+                      })}
                     </div>
                     <div className="mt-4 flex items-center gap-2 text-xs text-on-surface-variant bg-surface-container rounded-lg px-3 py-2.5">
-                      <Lock className="w-3.5 h-3.5 text-primary shrink-0" />
-                      Payments are processed securely. This is a demo checkout — no real charge is made.
+                      <Truck className="w-3.5 h-3.5 text-primary shrink-0" />
+                      You'll pay in cash when your order is delivered. Nothing is charged now.
                     </div>
                     {submitError && (
                       <div className="mt-4 flex items-start gap-2 text-sm text-error bg-error-container rounded-lg px-3 py-2.5">
@@ -273,12 +276,12 @@ export function CheckoutWizard({ navigate }: CheckoutWizardProps) {
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </motion.button>
               ) : (
-                <motion.button onClick={handlePayAndPlace} disabled={processing}
+                <motion.button onClick={handlePlaceOrder} disabled={processing}
                   className="btn-primary min-w-[180px]" whileTap={{ scale: 0.97 }}>
                   {processing ? (
-                    <><Loader2 className="w-4 h-4 animate-spin" /> Processing…</>
+                    <><Loader2 className="w-4 h-4 animate-spin" /> Placing order…</>
                   ) : (
-                    <><Lock className="w-4 h-4" /> Pay {formatINR(total)}</>
+                    <><Lock className="w-4 h-4" /> Place order · {formatINR(total)}</>
                   )}
                 </motion.button>
               )}

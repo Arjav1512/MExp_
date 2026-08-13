@@ -78,15 +78,28 @@ export interface OrderAddress {
   pincode: string;
 }
 
+export interface PlacedOrderItem {
+  product_name: string;
+  quantity: number;
+  line_total_cents: number;
+}
+
 export interface PlacedOrder {
   order_number: string;
   subtotal_cents: number;
   shipping_cents: number;
   total_cents: number;
   currency: string;
+  status: string;
+  payment_status: string;
+  payment_method: string;
+  access_token: string;
+  items: PlacedOrderItem[];
 }
 
 export async function placeOrder(input: {
+  idempotency_key: string;
+  payment_method: string;
   customer: OrderCustomer;
   address: OrderAddress;
   items: { product_id: string; quantity: number }[];
@@ -111,4 +124,13 @@ export async function placeOrder(input: {
   }
 
   return body as PlacedOrder;
+}
+
+export async function fetchOrder(orderNumber: string, accessToken: string): Promise<PlacedOrder | null> {
+  const { data, error } = await supabase.rpc('get_order', {
+    p_order_number: orderNumber,
+    p_access_token: accessToken,
+  });
+  if (error || !data || typeof (data as PlacedOrder).order_number !== 'string') return null;
+  return data as PlacedOrder;
 }

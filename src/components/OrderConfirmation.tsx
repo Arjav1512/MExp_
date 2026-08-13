@@ -11,6 +11,8 @@ interface OrderConfirmationProps {
 }
 
 export function OrderConfirmation({ order, email, navigate }: OrderConfirmationProps) {
+  const paid = order.payment_status === 'paid';
+  const totalLabel = paid ? 'Total paid' : 'Total due on delivery';
   return (
     <div className="max-w-lg mx-auto text-center py-8">
       <motion.div
@@ -52,6 +54,16 @@ export function OrderConfirmation({ order, email, navigate }: OrderConfirmationP
           <span className="text-sm text-on-surface-variant">Order number</span>
           <span className="font-headline font-black text-primary tracking-wide">{order.order_number}</span>
         </div>
+        {order.items.length > 0 && (
+          <div className="space-y-2 pb-4 border-b border-surface-container-high">
+            {order.items.map((item, i) => (
+              <div key={i} className="flex justify-between text-sm gap-2">
+                <span className="text-on-surface-variant">{item.product_name} × {item.quantity}</span>
+                <span className="font-semibold text-on-surface tabular-nums shrink-0">{formatINR(item.line_total_cents)}</span>
+              </div>
+            ))}
+          </div>
+        )}
         <div className="space-y-2.5">
           <div className="flex justify-between text-sm">
             <span className="text-on-surface-variant">Subtotal</span>
@@ -62,9 +74,12 @@ export function OrderConfirmation({ order, email, navigate }: OrderConfirmationP
             <span className="font-semibold text-on-surface tabular-nums">{order.shipping_cents === 0 ? 'Free' : formatINR(order.shipping_cents)}</span>
           </div>
           <div className="flex justify-between text-base pt-2.5 border-t border-surface-container-high">
-            <span className="font-bold text-on-surface">Total paid</span>
+            <span className="font-bold text-on-surface">{totalLabel}</span>
             <span className="font-headline font-black text-primary tabular-nums">{formatINR(order.total_cents)}</span>
           </div>
+          {!paid && (
+            <p className="text-xs text-on-surface-variant pt-1">Pay in cash when your order is delivered. Nothing has been charged.</p>
+          )}
         </div>
       </motion.div>
 
