@@ -1,8 +1,9 @@
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ShoppingBag } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Page } from '../lib/router';
 import { trackCTAClick } from '../lib/analytics';
+import { useCart } from '../lib/cart';
 
 interface HeaderProps {
   page: Page;
@@ -13,6 +14,7 @@ interface HeaderProps {
 export function Header({ page, navigate, onShopCTA }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { count, openCart } = useCart();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -64,10 +66,32 @@ export function Header({ page, navigate, onShopCTA }: HeaderProps) {
           <NavButton label="Our Mission" active={page === 'mission'} onClick={() => handleNav('mission')} />
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 md:gap-3">
+          <motion.button
+            className="relative w-10 h-10 rounded-lg flex items-center justify-center text-primary hover:bg-surface-container transition-colors"
+            onClick={openCart}
+            aria-label={`Open cart${count > 0 ? `, ${count} item${count === 1 ? '' : 's'}` : ''}`}
+            whileTap={{ scale: 0.9 }}
+          >
+            <ShoppingBag className="w-5 h-5" />
+            <AnimatePresence>
+              {count > 0 && (
+                <motion.span
+                  key={count}
+                  className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-primary text-on-primary text-[10px] font-black flex items-center justify-center tabular-nums"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  transition={{ type: 'spring', stiffness: 500, damping: 20 }}
+                >
+                  {count}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
           <motion.button
             className="btn-primary hidden md:inline-flex"
-            onClick={() => { trackCTAClick('Order Now', 'coming-soon-modal'); setIsMenuOpen(false); onShopCTA(); }}
+            onClick={() => { trackCTAClick('Order Now', 'product-page'); setIsMenuOpen(false); onShopCTA(); }}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.96 }}
           >
@@ -130,7 +154,7 @@ export function Header({ page, navigate, onShopCTA }: HeaderProps) {
               >
                 <motion.button
                   className="btn-primary w-full"
-                  onClick={() => { trackCTAClick('Order Now', 'coming-soon-modal'); setIsMenuOpen(false); onShopCTA(); }}
+                  onClick={() => { trackCTAClick('Order Now', 'product-page'); setIsMenuOpen(false); onShopCTA(); }}
                   whileTap={{ scale: 0.97 }}
                 >
                   Order Now

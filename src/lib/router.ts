@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { trackPageView } from './analytics';
 
-export type Page = 'home' | 'mission';
+export type Page = 'home' | 'mission' | 'product' | 'checkout';
 
 export function useRouter(): [Page, (page: Page) => void] {
   const getPage = (): Page => {
-    return window.location.hash === '#mission' ? 'mission' : 'home';
+    const hash = window.location.hash.replace('#', '');
+    if (hash === 'mission' || hash === 'product' || hash === 'checkout') return hash;
+    return 'home';
   };
 
   const [page, setPageState] = useState<Page>(getPage);

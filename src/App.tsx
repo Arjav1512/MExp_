@@ -1,7 +1,8 @@
-import { useState, lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { Footer } from './components/Footer';
+import { CartDrawer } from './components/CartDrawer';
 import { useRouter } from './lib/router';
 
 const ProductShowcase = lazy(() => import('./components/ProductShowcase').then(m => ({ default: m.ProductShowcase })));
@@ -11,22 +12,13 @@ const Testimonials = lazy(() => import('./components/Testimonials').then(m => ({
 const Newsletter = lazy(() => import('./components/Newsletter').then(m => ({ default: m.Newsletter })));
 const ConversionCloser = lazy(() => import('./components/ConversionCloser').then(m => ({ default: m.ConversionCloser })));
 const OurMission = lazy(() => import('./components/OurMission').then(m => ({ default: m.OurMission })));
-const ComingSoonModal = lazy(() => import('./components/ComingSoonModal').then(m => ({ default: m.ComingSoonModal })));
+const ProductPage = lazy(() => import('./components/ProductPage').then(m => ({ default: m.ProductPage })));
+const CheckoutWizard = lazy(() => import('./components/CheckoutWizard').then(m => ({ default: m.CheckoutWizard })));
 
 function App() {
   const [page, navigate] = useRouter();
-  const [showComingSoon, setShowComingSoon] = useState(false);
 
-  const handleShopCTA = () => {
-    setShowComingSoon(true);
-  };
-
-  const handleSubscribeFromModal = () => {
-    setShowComingSoon(false);
-    setTimeout(() => {
-      document.getElementById('newsletter')?.scrollIntoView({ behavior: 'smooth' });
-    }, 250);
-  };
+  const handleShopCTA = () => navigate('product');
 
   return (
     <div className="min-h-screen bg-background text-on-background font-body">
@@ -35,6 +27,10 @@ function App() {
         <Suspense fallback={<div className="min-h-screen" />}>
           {page === 'mission' ? (
             <OurMission navigate={navigate} onShopCTA={handleShopCTA} />
+          ) : page === 'product' ? (
+            <ProductPage navigate={navigate} />
+          ) : page === 'checkout' ? (
+            <CheckoutWizard navigate={navigate} />
           ) : (
             <>
               <Hero navigate={navigate} onShopCTA={handleShopCTA} />
@@ -51,14 +47,7 @@ function App() {
         </Suspense>
       </main>
       <Footer navigate={navigate} />
-      {showComingSoon && (
-        <Suspense fallback={null}>
-          <ComingSoonModal
-            onClose={() => setShowComingSoon(false)}
-            onSubscribe={handleSubscribeFromModal}
-          />
-        </Suspense>
-      )}
+      <CartDrawer navigate={navigate} />
     </div>
   );
 }
