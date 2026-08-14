@@ -9,14 +9,31 @@ export interface Product {
   id: string;
   slug: string;
   name: string;
+  brand: string;
+  generic_name: string;
+  flavour: string;
+  dietary: string;
   tagline: string;
   description: string;
   price_cents: number;
+  mrp_cents: number;
   currency: string;
   weight_grams: number;
+  pack_size: string;
+  package_weight_grams: number;
+  dimensions: string;
+  origin: string;
+  manufacturer: string;
+  packer: string;
+  packer_contact: string;
+  shelf_life: string;
+  storage: string;
+  nutrition_basis: string;
   image_url: string;
   gallery: string[];
   benefits: string[];
+  claims: string[];
+  how_to_use: string[];
   ingredients: string[];
   nutrition: NutritionRow[];
   is_active: boolean;
@@ -25,6 +42,16 @@ export interface Product {
 
 export const FREE_SHIPPING_THRESHOLD_CENTS = 49900;
 export const FLAT_SHIPPING_CENTS = 4900;
+
+export function unitPricePer100gCents(priceCents: number, weightGrams: number): number {
+  if (weightGrams <= 0) return 0;
+  return Math.round((priceCents / weightGrams) * 100);
+}
+
+export function savingsPercent(mrpCents: number, priceCents: number): number {
+  if (mrpCents <= 0 || priceCents >= mrpCents) return 0;
+  return Math.round(((mrpCents - priceCents) / mrpCents) * 100);
+}
 
 export function shippingFor(subtotalCents: number): number {
   if (subtotalCents <= 0) return 0;
@@ -49,14 +76,31 @@ function normalize(row: Record<string, unknown>): Product {
     id: String(row.id),
     slug: String(row.slug),
     name: String(row.name),
+    brand: String(row.brand ?? ''),
+    generic_name: String(row.generic_name ?? ''),
+    flavour: String(row.flavour ?? ''),
+    dietary: String(row.dietary ?? ''),
     tagline: String(row.tagline ?? ''),
     description: String(row.description ?? ''),
     price_cents: Number(row.price_cents ?? 0),
+    mrp_cents: Number(row.mrp_cents ?? 0),
     currency: String(row.currency ?? 'INR'),
     weight_grams: Number(row.weight_grams ?? 0),
+    pack_size: String(row.pack_size ?? ''),
+    package_weight_grams: Number(row.package_weight_grams ?? 0),
+    dimensions: String(row.dimensions ?? ''),
+    origin: String(row.origin ?? ''),
+    manufacturer: String(row.manufacturer ?? ''),
+    packer: String(row.packer ?? ''),
+    packer_contact: String(row.packer_contact ?? ''),
+    shelf_life: String(row.shelf_life ?? ''),
+    storage: String(row.storage ?? ''),
+    nutrition_basis: String(row.nutrition_basis ?? ''),
     image_url: String(row.image_url ?? ''),
     gallery: Array.isArray(row.gallery) ? (row.gallery as string[]) : [],
     benefits: Array.isArray(row.benefits) ? (row.benefits as string[]) : [],
+    claims: Array.isArray(row.claims) ? (row.claims as string[]) : [],
+    how_to_use: Array.isArray(row.how_to_use) ? (row.how_to_use as string[]) : [],
     ingredients: Array.isArray(row.ingredients) ? (row.ingredients as string[]) : [],
     nutrition: Array.isArray(row.nutrition) ? (row.nutrition as NutritionRow[]) : [],
     is_active: Boolean(row.is_active),

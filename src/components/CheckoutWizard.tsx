@@ -203,7 +203,7 @@ export function CheckoutWizard({ navigate }: CheckoutWizardProps) {
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="font-bold text-on-surface text-sm">{item.name}</p>
-                            <p className="text-xs text-on-surface-variant">Qty {item.quantity} · {item.weight_grams}g</p>
+                            <p className="text-xs text-on-surface-variant">Qty {item.quantity} · {item.pack_size || `${item.weight_grams}g`}</p>
                           </div>
                           <span className="font-bold text-primary tabular-nums">{formatINR(item.price_cents * item.quantity)}</span>
                         </div>

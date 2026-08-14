@@ -79,6 +79,19 @@ email keys exist). Rather than fake a charge:
   fail an otherwise-valid order, and it is skipped on idempotent replays so a
   customer isn't emailed twice.
 
+## 6b. Product data synced to the real Amazon listing
+
+The purchasable product now mirrors the live Amazon SKU (ASIN B0H6C1FYSR): "Plain
+Phool Makhana", 250 g (pack of 1), ₹390 against a ₹499 MRP (22% off, ₹156 per
+100 g), single makhana ingredient, full per-100 g nutrition, plus specifications,
+claims, how-to-use and an FAQ. The product page was rebuilt to Amazon-level
+information completeness but kept entirely in the Makhana Express visual
+language — it does not look like Amazon. Amazon's star rating and reviews are
+deliberately excluded (no fabricated social proof, and none placed in structured
+data). Full detail and sourcing are in `AMAZON_PRODUCT_SOURCE.md` and
+`PRODUCT_COMMERCE_GAP_REPORT.md`. All order pricing is still computed
+server-side; the displayed price/MRP are facts, not the charged amount.
+
 ## 7. Known intentional advisor findings
 
 `get_advisors (security)` reports four items, all expected by design:
@@ -96,7 +109,8 @@ email keys exist). Rather than fake a charge:
 - Lint: no errors (one pre-existing non-blocking fast-refresh warning in the
   cart file).
 - Database behaviour (atomicity, inventory, idempotency, secure lookup, payment
-  refusal): verified — see `E2E_ORDERING_TEST_REPORT.md`.
+  refusal) **and product-data accuracy vs the Amazon listing**: verified — see
+  `E2E_ORDERING_TEST_REPORT.md` (30/30 checks).
 - Browser UI: not visually verified in this environment (no browser automation
   available here). The full public path was instead exercised programmatically
   through the exact same endpoints the browser uses.

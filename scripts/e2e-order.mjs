@@ -39,7 +39,7 @@ function check(name, condition, detail = '') {
 }
 
 async function restReadProduct() {
-  const url = `${BASE}/rest/v1/products?is_active=eq.true&select=id,slug,name,price_cents,stock&order=sort_order.asc&limit=1`;
+  const url = `${BASE}/rest/v1/products?is_active=eq.true&select=id,slug,name,price_cents,mrp_cents,weight_grams,pack_size,flavour,origin,manufacturer,packer,ingredients,nutrition,stock&order=sort_order.asc&limit=1`;
   const res = await fetch(url, { headers: anonHeaders });
   const rows = await res.json();
   return Array.isArray(rows) && rows[0] ? rows[0] : null;
@@ -92,6 +92,22 @@ async function main() {
 
   const startStock = await readStock(product.id);
   check('Product stock is readable and positive', typeof startStock === 'number' && startStock > 0, `stock=${startStock}`);
+
+  // 1b. Product data matches the real Amazon listing (ASIN B0H6C1FYSR)
+  const ingredients = Array.isArray(product.ingredients) ? product.ingredients.join(' ').toLowerCase() : '';
+  const nutritionLabels = Array.isArray(product.nutrition) ? product.nutrition.map((n) => String(n.label).toLowerCase()) : [];
+  check('Product name is "Plain Phool Makhana"', /plain phool makhana/i.test(product.name || ''), product.name);
+  check('Slug reflects the plain product', product.slug === 'plain-phool-makhana', product.slug);
+  check('Net weight is 250 g', product.weight_grams === 250, `${product.weight_grams} g`);
+  check('Pack size stated as pack of 1', /250\s*g/i.test(product.pack_size || '') && /pack of 1/i.test(product.pack_size || ''), product.pack_size);
+  check('Flavour is plain / unflavoured', /unflavou?red|plain/i.test(product.flavour || ''), product.flavour);
+  check('Selling price is Rs 390', product.price_cents === 39000, `price_cents=${product.price_cents}`);
+  check('MRP is Rs 499 and above selling price', product.mrp_cents === 49900 && product.mrp_cents > product.price_cents, `mrp_cents=${product.mrp_cents}`);
+  check('Single ingredient is makhana / fox nuts', /makhana|fox\s*nut/i.test(ingredients), ingredients || 'none');
+  check('Nutrition facts present (per 100 g basis)', nutritionLabels.some((l) => /protein/.test(l)) && nutritionLabels.some((l) => /energy|calorie/.test(l)), `${nutritionLabels.length} rows`);
+  check('Country of origin is India', /india/i.test(product.origin || ''), product.origin);
+  check('Manufacturer is recorded', Boolean(product.manufacturer), product.manufacturer || 'missing');
+  check('Packer is recorded', Boolean(product.packer), product.packer || 'missing');
 
   // 2. Place a genuine COD order (qty 1)
   const qty = 1;

@@ -9,6 +9,7 @@ export interface CartItem {
   price_cents: number;
   image_url: string;
   weight_grams: number;
+  pack_size: string;
   quantity: number;
 }
 
@@ -76,6 +77,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           price_cents: product.price_cents,
           image_url: product.image_url,
           weight_grams: product.weight_grams,
+          pack_size: product.pack_size,
           quantity: Math.min(MAX_QTY, Math.max(1, quantity)),
         },
       ];

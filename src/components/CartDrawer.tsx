@@ -110,7 +110,7 @@ export function CartDrawer({ navigate }: CartDrawerProps) {
                           <div className="flex items-start justify-between gap-2">
                             <div className="min-w-0">
                               <p className="font-bold text-on-surface text-sm truncate">{item.name}</p>
-                              <p className="text-xs text-on-surface-variant">{item.weight_grams}g pack</p>
+                              <p className="text-xs text-on-surface-variant">{item.pack_size || `${item.weight_grams}g pack`}</p>
                             </div>
                             <button
                               onClick={() => removeItem(item.product_id)}
