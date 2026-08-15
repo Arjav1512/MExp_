@@ -53,9 +53,9 @@ export default {
         "on-secondary": "#ffffff"
       },
       fontFamily: {
-        "headline": ["Epilogue", "sans-serif"],
-        "body": ["Plus Jakarta Sans", "sans-serif"],
-        "label": ["Plus Jakarta Sans", "sans-serif"]
+        "headline": ["Epilogue", "Epilogue Fallback", "sans-serif"],
+        "body": ["Plus Jakarta Sans", "Plus Jakarta Sans Fallback", "sans-serif"],
+        "label": ["Plus Jakarta Sans", "Plus Jakarta Sans Fallback", "sans-serif"]
       },
       borderRadius: {
         "DEFAULT": "1rem",

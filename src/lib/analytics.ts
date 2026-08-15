@@ -27,12 +27,14 @@ export function trackEvent(name: EventName, properties?: EventProperties) {
     return;
   }
 
-  supabase
-    .from('analytics_events')
-    .insert([{ event: payload.event, properties: payload.properties }])
-    .then(({ error }) => {
-      if (error) console.error('[Analytics] insert failed:', error.message);
-    });
+  Promise.resolve(
+    supabase
+      .from('analytics_events')
+      .insert([{ event: payload.event, properties: payload.properties }])
+      .then(({ error }) => {
+        if (error) console.error('[Analytics] insert failed:', error.message);
+      })
+  ).catch(() => {});
 }
 
 export function trackPageView(page: string) {

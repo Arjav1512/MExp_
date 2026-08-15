@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { trackPageView } from './analytics';
 
-export type Page = 'home' | 'mission';
+export type Page = 'home' | 'mission' | 'product' | 'checkout';
 
 export function useRouter(): [Page, (page: Page) => void] {
   const getPage = (): Page => {
-    return window.location.hash === '#mission' ? 'mission' : 'home';
+    const hash = window.location.hash.replace('#', '');
+    if (hash === 'mission' || hash === 'product' || hash === 'checkout') return hash;
+    return 'home';
   };
 
   const [page, setPageState] = useState<Page>(getPage);
@@ -25,9 +27,13 @@ export function useRouter(): [Page, (page: Page) => void] {
   }, []);
 
   const navigate = (target: Page) => {
-    window.location.hash = target === 'home' ? '' : target;
+    const newHash = target === 'home' ? '' : target;
+    if (window.location.hash.replace('#', '') === newHash) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    window.location.hash = newHash;
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    setPageState(target);
   };
 
   return [page, navigate];
