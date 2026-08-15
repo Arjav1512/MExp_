@@ -63,6 +63,16 @@ function log(
 // If the secret is not configured we log a warning and allow the request
 // through in development. In production this should always be set.
 // =============================================================================
+// Length-independent, byte-wise comparison. Always walks the full length of
+// the expected value so the time taken does not depend on how many bytes match.
+function timingSafeEqual(a: string, b: string): boolean {
+  let diff = a.length ^ b.length;
+  for (let i = 0; i < b.length; i++) {
+    diff |= (a.charCodeAt(i) || 0) ^ b.charCodeAt(i);
+  }
+  return diff === 0;
+}
+
 async function verifySignature(
   req: Request,
   rawBody: string,
@@ -122,10 +132,12 @@ async function verifySignature(
 
   const computed = btoa(String.fromCharCode(...new Uint8Array(sig)));
 
-  // svix-signature may contain multiple space-separated "v1,<base64>" entries
+  // svix-signature may contain multiple space-separated "v1,<base64>" entries.
+  // Compared in constant time so response latency cannot reveal how many
+  // leading bytes of a forged signature were correct.
   const valid = svixSignature.split(" ").some((part) => {
     const [version, value] = part.split(",");
-    return version === "v1" && value === computed;
+    return version === "v1" && timingSafeEqual(value ?? "", computed);
   });
 
   if (!valid) {

@@ -10,6 +10,48 @@ const corsHeaders = {
 const FREE_SHIPPING_THRESHOLD_CENTS = 49900;
 const FLAT_SHIPPING_CENTS = 4900;
 
+// =============================================================================
+// ORDER RATE LIMIT — Postgres-backed, concurrency-safe
+// -----------------------------------------------------------------------------
+// Guest checkout is intentionally unauthenticated, so without a limit a single
+// caller can loop this endpoint, permanently decrementing products.stock on
+// every request and driving one confirmation email per request. The window is
+// deliberately generous: a real customer places one, maybe two orders in ten
+// minutes, while a scripted drain needs hundreds.
+//
+// Uses the same atomic INSERT ... ON CONFLICT counter as send-welcome-email.
+// Fails OPEN if the limiter itself errors, so a limiter outage can never block
+// a legitimate checkout.
+// =============================================================================
+const RL_WINDOW_SECS = 600;
+const RL_ORDERS_PER_IP = 5;
+
+async function checkOrderRateLimit(
+  db: ReturnType<typeof createClient>,
+  ip: string,
+): Promise<boolean> {
+  const windowStart = new Date(
+    Math.floor(Date.now() / (RL_WINDOW_SECS * 1000)) * (RL_WINDOW_SECS * 1000),
+  ).toISOString();
+
+  const { data, error } = await db.rpc("upsert_rate_limit_counter", {
+    p_key: `order:ip:${ip}`,
+    p_window_start: windowStart,
+    p_max: RL_ORDERS_PER_IP,
+  });
+
+  if (error) {
+    console.error(JSON.stringify({
+      level: "warn",
+      code: "ORDER_RATE_LIMIT_DB_ERROR",
+      message: error.message,
+    }));
+    return true;
+  }
+
+  return (data as number) <= RL_ORDERS_PER_IP;
+}
+
 interface IncomingItem { product_id: string; quantity: number; }
 interface OrderPayload {
   idempotency_key?: string;
@@ -149,6 +191,18 @@ Deno.serve(async (req: Request) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
       { auth: { persistSession: false } },
     );
+
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      req.headers.get("x-real-ip") ||
+      "unknown";
+
+    if (!(await checkOrderRateLimit(supabase, ip))) {
+      return json(
+        { error: "Too many orders from this connection. Please try again shortly.", code: "RATE_LIMITED" },
+        429,
+      );
+    }
 
     const { data, error } = await supabase.rpc("create_order", {
       p_idempotency_key: idempotencyKey,

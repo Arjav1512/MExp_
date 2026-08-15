@@ -54,8 +54,17 @@ export function Newsletter() {
 
       if (error) {
         if (error.code === '23505') {
-          setStatus('error');
-          setMessage('This email is already subscribed!');
+          // Already subscribed. Show the exact same confirmation as a brand new
+          // signup so this form cannot be used to test whether a given address
+          // is on the list. No second coupon email is sent.
+          trackEvent('newsletter_success');
+          setStatus('success');
+          setMessage("You're on the list! We'll send your 20% off code when we launch.");
+          setEmail('');
+          setTimeout(() => {
+            setStatus('idle');
+            setMessage('');
+          }, 6000);
         } else {
           throw error;
         }
