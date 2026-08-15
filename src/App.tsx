@@ -10,6 +10,7 @@ const FlavorSpectrum = lazy(() => import('./components/FlavorSpectrum').then(m =
 const Craftsmanship = lazy(() => import('./components/Craftsmanship').then(m => ({ default: m.Craftsmanship })));
 const Testimonials = lazy(() => import('./components/Testimonials').then(m => ({ default: m.Testimonials })));
 const Newsletter = lazy(() => import('./components/Newsletter').then(m => ({ default: m.Newsletter })));
+const SocialProof = lazy(() => import('./components/social/SocialProof').then(m => ({ default: m.SocialProof })));
 const ConversionCloser = lazy(() => import('./components/ConversionCloser').then(m => ({ default: m.ConversionCloser })));
 const OurMission = lazy(() => import('./components/OurMission').then(m => ({ default: m.OurMission })));
 const ProductPage = lazy(() => import('./components/ProductPage').then(m => ({ default: m.ProductPage })));
@@ -39,6 +40,7 @@ function App() {
                 <FlavorSpectrum onShopCTA={handleShopCTA} />
                 <Craftsmanship />
                 <Testimonials />
+                <SocialProof />
                 <ConversionCloser onShopCTA={handleShopCTA} />
                 <Newsletter />
               </Suspense>
