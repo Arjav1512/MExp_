@@ -77,6 +77,30 @@ First-party reviews collected, moderated, and displayed by the app itself.
 | Customer Feedback| `ADMIN_API_KEY` (to moderate) — display already live | edge-function secret |
 | Instagram feed   | Official Instagram embed / Graph connection          | (future) |
 
+## Public vs. server-only configuration
+
+- **Public (safe to expose, prefix `VITE_`, set in the hosting env / Vercel):**
+  `VITE_TRUSTPILOT_BUSINESS_UNIT_ID`, `VITE_TRUSTPILOT_TEMPLATE_ID`, `VITE_TRUSTPILOT_DOMAIN`,
+  `VITE_TRUSTPILOT_REVIEW_URL`, `VITE_AMAZON_ASIN`, `VITE_AMAZON_MARKETPLACE`,
+  `VITE_INSTAGRAM_HANDLE`, plus the existing `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY`.
+  These are public identifiers by design (widget IDs, a public listing ASIN, a public handle).
+- **Server-only secrets (NEVER `VITE_`, NEVER in the browser, set as Supabase edge-function secrets):**
+  `ADMIN_API_KEY` (review moderation). The Supabase service-role key and Resend keys are already
+  server-only. No secret is ever read by frontend code.
+
+Current status of the moderation secret: **`ADMIN_API_KEY` is not set yet.** Review submission and
+public display work without it; approving/rejecting reviews is disabled until an operator adds it.
+
+## Performance & accessibility
+
+- Trustpilot's script is injected once, asynchronously, and only when a business ID is configured —
+  it never blocks first paint. The whole social-proof block is code-split and loaded lazily.
+- All images carry explicit width/height to avoid layout shift.
+- The reviews carousel is a labelled, keyboard-focusable region; star inputs and all buttons have
+  accessible names; form fields have labels and accessible validation messages.
+- The site now honours the operating-system "reduce motion" preference globally: motion is minimised
+  for visitors who request it.
+
 ## Known limitations
 
 - Amazon live ratings and Instagram live feed are built as production-ready components with honest

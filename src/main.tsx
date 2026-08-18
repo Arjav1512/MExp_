@@ -1,5 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { MotionConfig } from 'framer-motion';
 import App from './App.tsx';
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 import { CartProvider } from './lib/cart.tsx';
@@ -12,7 +13,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
       <CartProvider>
-        <App />
+        <MotionConfig reducedMotion="user">
+          <App />
+        </MotionConfig>
       </CartProvider>
     </ErrorBoundary>
   </StrictMode>

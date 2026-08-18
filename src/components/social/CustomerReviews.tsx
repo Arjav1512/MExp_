@@ -118,7 +118,10 @@ export function CustomerReviews({ productSlug }: CustomerReviewsProps) {
 
             <motion.div
               ref={scroller}
-              className="flex gap-5 overflow-x-auto snap-x snap-mandatory pb-3 -mx-1 px-1 scroll-smooth"
+              role="region"
+              aria-label="Customer reviews, scrollable"
+              tabIndex={0}
+              className="flex gap-5 overflow-x-auto snap-x snap-mandatory pb-3 -mx-1 px-1 scroll-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl"
               style={{ scrollbarWidth: 'none' }}
               variants={staggerContainerFast}
               initial="hidden"
